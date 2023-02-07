@@ -60,11 +60,11 @@
           </a-row>
         </a-form>
       </div>
-      
+
       <div class="operate-wrapper">
         <a-button @click="onCreate" class="btn-item" type="primary">新增</a-button>
       </div>
-      
+
       <a-table
         :columns="columns"
         :dataSource="rows"
@@ -76,24 +76,24 @@
         :scroll="{ x: 1500 }"
       >
         <span slot="serial" slot-scope="text, record, index">{{ serial + index + 1 }}</span>
-        
+
         <span slot="role" slot-scope="roleId">{{ roleId | roleFilter(roleOptions) }}</span>
-        
+
         <span slot="status" slot-scope="status">{{ status === 1 ? '启用' : '禁用' }}</span>
-        
+
         <span slot="updateTime" slot-scope="updateTime">
           {{ new Date(updateTime) | formatDate('yyyy-MM-dd hh:mm:ss') }}
         </span>
-        
+
         <div slot="actions" slot-scope="record">
           <a @click="onEdit(record)" href="javascript:0;">编辑</a>
           <a-divider type="vertical" />
           <a @click="onDelete(record.id)" href="javascript:0;">删除</a>
         </div>
-      
+
       </a-table>
     </a-card>
-    
+
     <!--新增/修改用户-->
     <account-modal :visible="visible" :account="currentAccount" @close="onModalClose" />
   </div>
@@ -186,10 +186,10 @@ export default {
       form: {},
       // 当前选中行
       selectedRowKeys: [],
-      
+
       // 角色下拉框 备选项
       roleOptions: [],
-      
+
       visible: false,
       currentAccount: null
     }

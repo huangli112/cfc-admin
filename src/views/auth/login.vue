@@ -1,9 +1,9 @@
 <template>
   <div class="login">
-    <a-card style="width: 460px;" :body-style="{padding: '84px 64px'}">
+    <a-card style="width: 520px;" :body-style="{padding: '84px 64px'}">
       <div class="logo-wrapper">
         <img src="../../assets/images/logo.png" class="logo" alt="背景图" />
-        <span class="title">VUE-ANTD-PRO</span>
+        <span class="title">场方程后台管理系统</span>
       </div>
 
       <a-form :form="form" class="login-form">
@@ -94,12 +94,11 @@
 <script>
 import { mapActions } from 'vuex'
 import ValidateCode from '@/components/ValidateCode'
-import LayoutFooter from '@/components/Layout/App/LayoutFooter'
 import { encryptpwd } from '@/utils'
 import { timeFix } from '@/utils/time'
 
 export default {
-  components: { ValidateCode, LayoutFooter },
+  components: { ValidateCode },
   data () {
     return {
       form: this.$form.createForm(this),

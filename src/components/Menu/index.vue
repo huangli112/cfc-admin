@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { mapState } from 'vuex'
+import { SideMenus } from '../../utils/constant'
 import { appStoreMixin, deviceMixin } from '@/mixins'
 import { generateOpenKeys } from '@/utils'
 
@@ -23,7 +23,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('permission', ['menus']),
     isSide () {
       return (
         this.layoutMode === 'side' ||
@@ -64,11 +63,11 @@ export default {
       keyPath.shift()
       keyPath.pop()
       this.selectedKeys = [fullPath]
-      
+
       if (this.mode === 'inline') {
         openKeys = generateOpenKeys(keyPath)
       }
-      
+
       this.collapsed
         ? (this.cacheOpenKeys = openKeys)
         : (this.openKeys = openKeys)
@@ -85,17 +84,16 @@ export default {
       openKeys,
       selectedKeys,
       $route,
-      menus,
       handleMenuClick,
       onOpenChange
     } = this
-    
+
     const menuWrapClass = [
       'lu-menu',
       isSide && 'lu-menu__side',
       `lu-menu__${ menuTheme }`
     ]
-    
+
     const menuProps = {
       mode,
       openKeys,
@@ -103,12 +101,12 @@ export default {
       theme: menuTheme,
       defaultSelectedKeys: [$route.path]
     }
-    
+
     const menuEvent = {
       click: handleMenuClick,
       openChange: onOpenChange
     }
-    
+
     // 递归生成菜单
     function generateMenu (menus) {
       if (menus) {
@@ -134,11 +132,11 @@ export default {
         })
       }
     }
-    
+
     return (
       <div class={ menuWrapClass }>
         <a-menu props={ menuProps } on={ menuEvent }>
-          { generateMenu(menus) }
+          { generateMenu(SideMenus) }
         </a-menu>
       </div>
     )
@@ -149,21 +147,21 @@ export default {
   .lu-menu {
     &.lu-menu__side {
       border-top: 1px solid #3d4348;
-      
+
       &.lu-menu__light {
         border-top-color: rgba(61, 67, 72, 0.1);
       }
     }
   }
-  
+
   .ant-menu {
     background: transparent;
-    
+
     &.ant-menu-horizontal {
       height: 65px;
       line-height: 65px;
     }
-    
+
     .ant-menu-inline.ant-menu-sub {
       background: rgba(37, 37, 37, 1);
       box-shadow: none;

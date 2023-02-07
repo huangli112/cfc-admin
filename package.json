@@ -1,17 +1,9 @@
 {
-	"name": "vue-antd-pro",
+	"name": "cfc-admin",
 	"version": "0.1.0",
 	"description": "A Vue.js template for PC backstage base ant-design-vue",
 	"author": "luichooy",
 	"license": "MIT",
-	"homepage": "https://github.com/luichooy/vue-antd-pro",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/luichooy/vue-antd-pro.git"
-	},
-	"bugs": {
-		"url": "https://github.com/luichooy/vue-antd-pro/issues"
-	},
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve",
@@ -23,11 +15,11 @@
 	"dependencies": {
 		"@antv/data-set": "^0.10.2",
 		"@antv/g2": "^3.5.11",
+		"@wangeditor/editor": "^5.1.23",
+		"@wangeditor/editor-for-vue": "^1.0.2",
 		"ant-design-vue": "^1.4.5",
 		"axios": "^0.19.0",
 		"core-js": "^2.6.5",
-		"d3": "^5.14.1",
-		"echarts": "^4.4.0",
 		"enquire.js": "^2.1.6",
 		"js-base64": "^2.5.1",
 		"moment": "^2.24.0",

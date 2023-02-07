@@ -7,7 +7,7 @@ export default {
     const {
       $route: { meta }
     } = this
-    
+
     const inKeep = (
       <keep-alive>
         <router-view />

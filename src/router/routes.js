@@ -1,23 +1,19 @@
-import { AppLayout, ViewLayout } from '@/components/Layout'
+import { AppLayout } from '@/components/Layout'
 
-const otherRoutes = [
+export const otherRoutes = [
   {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "login" */ '@/views/auth/login')
   },
   {
-    path: '/error',
-    name: 'error',
-    redirect: '404',
-    component: ViewLayout,
-    children: [
-      {
-        path: '404',
-        name: '404',
-        component: () => import(/* webpackChunkName: "404" */ '@/views/error/404')
-      }
-    ]
+    path: '/404',
+    name: '404',
+    component: () => import(/* webpackChunkName: "404" */ '@/views/error/404')
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
 ]
 
@@ -25,114 +21,71 @@ export const appRoutes = [
   {
     path: '/',
     name: 'index',
-    redirect: '/dashboard/analysis',
+    redirect: '/home',
     component: AppLayout,
     children: [
       {
-        path: 'table',
-        name: 'table',
+        path: 'home',
+        name: 'home',
         meta: {
-          title: '表格页',
-          icon: 'table'
+          title: '首页',
+          icon: 'home'
+        },
+        component: () => import(/* webpackChunkName: "table" */ '@/views/home/home')
+      },
+      {
+        path: '/about-company',
+        name: 'about-company',
+        meta: {
+          title: '关于公司',
+          icon: 'project'
         },
         component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
       },
       {
-        path: 'dashboard',
-        name: 'dashboard',
+        path: '/train',
+        name: 'train',
         meta: {
-          title: 'Dashboard',
-          icon: 'dashboard'
+          title: '实训板块',
+          icon: 'appstore'
         },
-        component: ViewLayout,
-        children: [
-          {
-            path: 'analysis',
-            name: 'dashboard_analysis',
-            meta: {
-              title: '分析页'
-            },
-            component: () => import(/* webpackChunkName: "analysis" */ '@/views/dashboard/analysis')
-          },
-          {
-            path: 'monitor',
-            name: 'dashboard_monitor',
-            meta: {
-              title: '监控页'
-            },
-            component: () => import(/* webpackChunkName: "monitor" */ '@/views/dashboard/monitor')
-          },
-          {
-            path: 'v-charts',
-            name: 'v-charts',
-            meta: {
-              title: 'v-charts'
-            },
-            component: () => import(/* webpackChunkName: "v-charts" */ '@/views/dashboard/vcharts')
-          },
-          {
-            path: 'track',
-            name: 'track',
-            meta: {
-              title: '轨迹图'
-            },
-            component: () => import(/* webpackChunkName: "track" */ '@/views/dashboard/track')
-          }
-        ]
+        component: () => import(/* webpackChunkName: "table" */ '@/views/home/home')
       },
       {
-        path: 'd3',
-        name: 'd3',
+        path: '/company-info',
+        name: 'company-info',
         meta: {
-          title: 'D3',
-          icon: 'stock'
+          title: '企业信息化',
+          icon: 'folder-open'
         },
-        component: ViewLayout,
-        children: [
-          {
-            path: 'bar',
-            name: 'd3_bar',
-            meta: {
-              title: 'bar'
-            },
-            component: () => import(/* webpackChunkName: "tutorials" */ '@/views/d3/bar')
-          },
-          {
-            path: 'line',
-            name: 'd3_line',
-            meta: {
-              title: 'line'
-            },
-            component: () => import(/* webpackChunkName: "tutorials" */ '@/views/d3/line')
-          }
-        ]
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
       },
       {
-        path: 'g2',
-        name: 'g2',
+        path: '/partner',
+        name: 'partner',
         meta: {
-          title: 'g2',
-          icon: 'stock'
+          title: '合作伙伴',
+          icon: 'user'
         },
-        component: ViewLayout,
-        children: [
-          {
-            path: 'bar',
-            name: 'g2_bar',
-            meta: {
-              title: 'bar'
-            },
-            component: () => import(/* webpackChunkName: "tutorials" */ '@/views/g2/bar')
-          },
-          {
-            path: 'line',
-            name: 'g2_line',
-            meta: {
-              title: 'line'
-            },
-            component: () => import(/* webpackChunkName: "tutorials" */ '@/views/g2/line')
-          }
-        ]
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+      },
+      {
+        path: '/news',
+        name: 'news',
+        meta: {
+          title: '新闻动态',
+          icon: 'file-markdown'
+        },
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+      },
+      {
+        path: '/concat-us',
+        name: 'concat-us',
+        meta: {
+          title: '联系我们',
+          icon: 'phone'
+        },
+        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
       }
     ]
   }

@@ -13,7 +13,7 @@ import {
   Radio,
   Layout,
   List,
-  LocaleProvider,
+  ConfigProvider,
   message,
   Menu,
   Modal,
@@ -60,7 +60,7 @@ Vue.use(Radio)
 Vue.use(Radio.Group)
 Vue.use(Layout)
 Vue.use(List)
-Vue.use(LocaleProvider)
+Vue.use(ConfigProvider)
 Vue.use(Menu)
 Vue.use(Modal)
 Vue.use(Pagination)

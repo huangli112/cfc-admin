@@ -17,10 +17,10 @@
     <template v-if="!isMobile && layoutMode === 'side'">
       <layout-sider :collapsed="collapsed"></layout-sider>
     </template>
-    
+
     <a-layout :style="{ paddingLeft: contentLeft }" class="layout-right">
       <layout-header :collapsed="collapsed" @toggle="toggle" :style="{ left: contentLeft }"></layout-header>
-      
+
       <a-layout-content
         :class="['layout-content', layoutMode === 'top' && `layout-content__${contentWidth}`]"
         :style="fixedHeader && {marginTop: '64px'}"
@@ -29,7 +29,6 @@
           <slot></slot>
         </div>
       </a-layout-content>
-      <layout-footer />
       <setting></setting>
     </a-layout>
   </a-layout>
@@ -38,7 +37,6 @@
 <script>
 import LayoutSider from './LayoutSider'
 import LayoutHeader from './LayoutHeader'
-import LayoutFooter from './LayoutFooter'
 import Setting from '@/components/Setting'
 import { appStoreMixin, deviceMixin } from '@/mixins'
 import { DEVICE_TYPE } from '@/utils/device'
@@ -48,7 +46,6 @@ export default {
   components: {
     LayoutSider,
     LayoutHeader,
-    LayoutFooter,
     Setting
   },
   mixins: [appStoreMixin, deviceMixin],
@@ -97,12 +94,12 @@ export default {
       position: relative;
       box-sizing: border-box;
       transition: all 0.3s;
-      
+
       .layout-content {
         width: 100%;
         padding: 16px 16px 0;
         display: flex;
-        
+
         .layout-content--inner {
           flex: 1 1 auto;
           width: 100%;
@@ -110,12 +107,12 @@ export default {
         }
       }
     }
-    
+
     .layout-content__fixed {
       max-width: 1200px;
       margin: 0 auto;
     }
-    
+
     @media screen and (min-width: 1200px) {
       .layout-content__fixed {
         padding-left: 0 !important;
