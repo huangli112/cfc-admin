@@ -14,6 +14,12 @@ export const SideMenus = [
     title: '关于公司'
   },
   {
+    path: '/product',
+    name: 'product',
+    title: '软件产品',
+    icon: 'experiment'
+  },
+  {
     id: '3',
     icon: 'appstore',
     path: '/train',

@@ -126,9 +126,19 @@ casual.define('user', function (role) {
   }
 })
 
+casual.define('train', function (role) {
+  return {
+    id: casual.card_number(),
+    title: casual.title,
+    enTitle: casual.title,
+    copywrining: casual.text
+  }
+})
+
 module.exports = () => {
   const data = {
     users: [],
+    train: [],
     roles: roleMap,
     login: {
       status: 200,
