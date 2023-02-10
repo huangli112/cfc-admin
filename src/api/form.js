@@ -23,3 +23,23 @@ export function modifyAccount (params) {
 export function getRoles () {
   return request.get('/roles')
 }
+
+export function getModule () {
+  return request.get('/soft')
+}
+
+export function deleteModule (id) {
+  return request.delete(`/soft/${id}`)
+}
+
+export function createModule (params) {
+  params.createTime = Date.now()
+  params.updateTime = Date.now()
+  return request.post('/soft', params)
+}
+
+export function modifyModule (params) {
+  params.updateTime = Date.now()
+  const { id, ...user } = params
+  return request.patch(`/soft/${id}`, user)
+}

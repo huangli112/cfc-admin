@@ -47,5 +47,12 @@ export const SideMenus = [
     path: '/concat-us',
     name: 'concat-us',
     title: '联系我们'
+  },
+  {
+    id: '8',
+    icon: 'project',
+    path: '/soft',
+    name: 'soft',
+    title: '软件产品'
   }
 ]

@@ -86,6 +86,15 @@ export const appRoutes = [
           icon: 'phone'
         },
         component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+      },
+      {
+        path: '/soft',
+        name: 'soft',
+        meta: {
+          title: '软件产品',
+          icon: 'project'
+        },
+        component: () => import('@/views/soft/soft')
       }
     ]
   }
