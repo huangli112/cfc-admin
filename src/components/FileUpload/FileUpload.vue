@@ -1,20 +1,16 @@
 <template>
-  <a-modal v-model='show' title='编辑轮播图'
+  <a-modal v-model='show'
            :destroyOnClose='true'
-           :okText="uploading ? '上传中' : '开始上传'"
+           :okText="uploading ? '保存中' : '保存'"
            @cancel='cancel'
-           @ok='handleUpload'>
+           @ok='handleUpload'
+  >
     <a-form
       :form='form'
       name='validate-form'
       v-bind='formItemLayout'
     >
-      <a-form-item label='text'>
-        <a-input
-          v-decorator="['username']"
-        ></a-input>
-      </a-form-item>
-      <a-form-item label='附件'>
+      <a-form-item :label='labelName'>
         <a-upload
           list-type='picture'
           v-decorator="['files']"
@@ -33,7 +29,7 @@
 
 <script>
 export default {
-  props: ['visible'],
+  props: ['visible', 'labelName'],
   data () {
     return {
       value: '',

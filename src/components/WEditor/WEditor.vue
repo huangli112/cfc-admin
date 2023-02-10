@@ -12,7 +12,6 @@
       :defaultConfig='editorConfig'
       :mode='mode'
       @onCreated='onCreated'
-      @onChange="onChange"
     />
   </div>
 </template>
@@ -20,7 +19,6 @@
 <script>
 /* eslint-disable space-before-function-paren */
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import { DomEditor } from '@wangeditor/editor'
 
 export default {
   components: { Editor, Toolbar },
@@ -36,18 +34,12 @@ export default {
   methods: {
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错}
-    },
-    onChange(editor) {
-      console.log(11)
-      const toolbar = DomEditor.getToolbar(editor)
-      const curToolbarConfig = toolbar.getConfig()
-      console.log(curToolbarConfig.toolbarKeys)
     }
   },
   mounted() {
     // 模拟 ajax 请求，异步渲染编辑器
     setTimeout(() => {
-      this.html = '<p>模拟 Ajax 异步设置内容 HTML</p>'
+      this.html = '<p>IT规划不是摆设，它必须在得到切实可行的实施之后，才能发挥出促进业务、提升管理的作用，否则就是一堆废纸。因此，“落地”环节对IT规划关重要。如今IT规划已经不是个新鲜IT规划不是摆设，它必须在得到切实可行的实施之后，才能发挥出促进业务、提升管理的作用，否则就是一堆废纸。因此，“落地”环节对IT规划关重要。如今IT规划已经不是个新鲜...IT规划不是摆设，它必须在得到切实可行的实施之后，才能发挥出促进业务、提升管理的作用，否则就是一堆废纸。因此，“落地”环节对IT规划关重要。如今IT规划已经不是个新鲜IT规划不是摆设，它必须在得到切实可行的实施之后，才能发挥出促进业务、提升管理的作用，否则就是一堆废纸。因此，“落地”环节对IT规划关重要。如今IT规划已经不是个新鲜...IT规划不是摆设，它必须在得到切实可行的实施之后，才能发挥出促进业务、提升管理的作用，否则就是一堆废纸。因此，“落地”</p>'
     }, 1500)
   },
   beforeDestroy() {

@@ -164,7 +164,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f0f2f5 url("../../assets/images/login_bg.png");
+  background: #f0f2f5 url("../../assets/images/banner1.png");
   background-size: cover;
   background-repeat: no-repeat;
 

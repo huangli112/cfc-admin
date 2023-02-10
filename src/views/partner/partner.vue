@@ -1,18 +1,17 @@
 <template>
-  <a-card title='首页轮播图' :bordered='false'>
+  <a-card title='合作伙伴' :bordered='false'>
     <div class='operate-wrapper'>
-      <a-button type='primary' @click='showModal'>新增轮播图</a-button>
+      <a-button type='primary' @click='showModal'>新增</a-button>
     </div>
 
-    <a-list :grid='{ gutter: 16, column: 3 }' :data-source='listData'>
+    <a-list :grid='{ gutter: 16, column: 4 }' :data-source='listData'>
       <a-list-item slot='renderItem' slot-scope='item'>
         <a-card>
           <div style='width: 100%'>
-            <div style='display: flex; justify-content: end; margin-bottom: 10px'>
-              <a-button type='primary' style='margin-right: 10px' size='small' @click='showModal'>编辑</a-button>
-              <a-button type='danger' size='small' @click='deleteImg'>删除</a-button>
+            <div style='display: flex; justify-content: end '>
+              <a-button type='primary' size='small' @click='showModal'>编辑</a-button>
             </div>
-            <img :src='item.attachment' alt='' style='height: 160px;'>
+            <img :src='item.attachment' alt='' style='width: 100%; height: 60px;'>
           </div>
           <div>
 
@@ -25,15 +24,15 @@
       :visible='visible'
       @create="handleCreate"
       @cancel='handleCloseModal'
-      label-name="轮播图"
+      label-name="合作图片"
     />
   </a-card>
 </template>
 
 <script>
-import imgLogo from '../../assets/images/banner1.png'
-import imgLogo1 from '../../assets/images/banner2.png'
-import imgLogo3 from '../../assets/images/banner3.png'
+import imgLogo from '../../assets/images/p2.png'
+import imgLogo1 from '../../assets/images/p1.png'
+import imgLogo3 from '../../assets/images/p3.png'
 import FileUpload from '../../components/FileUpload/FileUpload'
 const data = [
   {
@@ -47,6 +46,18 @@ const data = [
   {
     title: 'Title 3',
     attachment: imgLogo3
+  },
+  {
+    title: 'Title 4',
+    attachment: imgLogo
+  },
+  {
+    title: 'Title 4',
+    attachment: imgLogo
+  },
+  {
+    title: 'Title 4',
+    attachment: imgLogo
   }
 ]
 export default {
@@ -60,9 +71,6 @@ export default {
   methods: {
     handleCloseModal () {
       this.visible = false
-    },
-    deleteImg () {
-
     },
     showModal () {
       this.visible = true

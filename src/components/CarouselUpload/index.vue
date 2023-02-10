@@ -12,12 +12,14 @@
       ref="uploadForm"
       :visible='isShowUpload'
       @create="handleCreate"
-      @cancel='handleCloseModal' />
+      @cancel='handleCloseModal'
+      label-name="合作图"
+    />
   </div>
-
 </template>
 <script>
-import FileUpload from '../FileUpload'
+
+import FileUpload from '../FileUpload/FileUpload'
 
 export default {
   props: { title: String },
@@ -34,6 +36,9 @@ export default {
       this.isShowUpload = true
     },
     handleCloseModal () {
+      const form = this.$refs.uploadForm.form
+      console.log(form)
+      form.resetFields()
       this.isShowUpload = false
     },
     handleCreate () {

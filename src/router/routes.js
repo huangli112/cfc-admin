@@ -40,7 +40,16 @@ export const appRoutes = [
           title: '关于公司',
           icon: 'project'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/about/about')
+      },
+      {
+        path: '/product',
+        name: 'product',
+        meta: {
+          title: '软件产品',
+          icon: 'appstore'
+        },
+        component: () => import(/* webpackChunkName: "table" */ '@/views/home/home')
       },
       {
         path: '/train',
@@ -49,7 +58,7 @@ export const appRoutes = [
           title: '实训板块',
           icon: 'appstore'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/home/home')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/train/train')
       },
       {
         path: '/company-info',
@@ -58,7 +67,7 @@ export const appRoutes = [
           title: '企业信息化',
           icon: 'folder-open'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/companyInfo/companyInfo')
       },
       {
         path: '/partner',
@@ -67,7 +76,7 @@ export const appRoutes = [
           title: '合作伙伴',
           icon: 'user'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/partner/partner')
       },
       {
         path: '/news',
@@ -76,7 +85,12 @@ export const appRoutes = [
           title: '新闻动态',
           icon: 'file-markdown'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/news/news')
+      },
+      {
+        path: '/news/detail/:id',
+        name: 'news-detail',
+        component: () => import(/* webpackChunkName: "table" */ '@/views/news/newsDetail')
       },
       {
         path: '/concat-us',
