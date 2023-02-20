@@ -6,50 +6,37 @@
     :maskClosable="false"
     :keyboard="false"
     :confirmLoading="loading"
-    :width="480"
+    :width="550"
     :title="module ? '编辑软件模块' : '新增软件模块'"
   >
-    <a-form :form="form">
-      <a-form-item v-bind="formItemLayout" label="模块名">
-        <a-input v-decorator="[
-          'name',
-          {
-            initialValue: module && module.name,
-            rules: [
-              { required: true, message: '请输入模块名!' }
-            ]
-          }
-        ]" :disabled="!!module" />
+    <a-form
+      :label-col='{ span: 5 }' :wrapper-col='{ span: 14 }'
+      :form='form'
+      v-bind='formItemLayout'
+    >
+      <a-form-item label='标题'>
+        <a-input placeholder='请输入标题' v-decorator="['title']" />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="一级标题">
-        <a-input v-decorator="[
-          'title',
-          {
-            initialValue: module && module.title,
-            rules: [{ required: true, message: '请输入一级标题!' }]
-          }
-        ]" />
+      <a-form-item label='副标题'>
+        <a-input placeholder='请输入副标题' v-decorator="['subheading']" />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="二级标题">
-        <a-input v-decorator="[
-          'subTitle',
-          {
-            initialValue: module && module.subTitle,
-            rules: [{ required: true, message: '请输入二级标题!' }]
-          }
-        ]" />
+      <a-form-item label='内容'>
+        <a-textarea placeholder='请输入描述' :rows='4' v-decorator="['cotent']" />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="描述">
-        <a-textarea v-decorator="[
-          'des',
-          {
-            initialValue: module && module.des,
-            rules: [ {required: true, message: '请输入描述!'} ]
-          }
-        ]" :autosize="{ minRows: 2, maxRows: 6 }" />
+      <a-form-item label='内容标签' extra='标签之间用英文逗号隔开'>
+        <a-textarea placeholder='请输入描述,' :rows='4' v-decorator="['contentDescription']" />
       </a-form-item>
-      <a-form-item v-bind="formItemLayout" label="轮播图">
-        <carousel-upload></carousel-upload>
+      <a-form-item label='附件' extra='此处上传产品板块轮播图'>
+        <a-upload
+          v-decorator="['upload',{valuePropName: 'fileList'}]"
+          action='http://114.67.199.59/cfc/file/upload'
+          list-type='text'
+        >
+          <a-button type='primary'>
+            <a-icon type='upload' />
+            点击上传
+          </a-button>
+        </a-upload>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -58,10 +45,9 @@
 <script>
 import { createModule, modifyModule } from '@/api/form'
 import ATextarea from 'ant-design-vue/es/input/TextArea'
-import CarouselUpload from '@/components/CarouselUpload'
 
 export default {
-  components: { ATextarea, CarouselUpload },
+  components: { ATextarea },
   props: {
     visible: {
       type: Boolean,

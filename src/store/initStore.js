@@ -47,6 +47,7 @@ export default function initStore () {
 
   store.commit('user/SET_TOKEN', Vue.ss.get(ACCESS_TOKEN, user.token))
   store.commit('user/SET_USER', Vue.ss.get(USER, user.user))
+  store.commit('user/SET_HEADERS', Vue.ss.get(USER, user.header))
 
   store.commit('permission/SET_MENUS', Vue.ss.get(MENUS, permission.menus))
 

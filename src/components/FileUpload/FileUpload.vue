@@ -1,7 +1,7 @@
 <template>
   <a-modal v-model='show'
            :destroyOnClose='true'
-           :okText="uploading ? '保存中' : '保存'"
+           okText='保存'
            @cancel='cancel'
            @ok='handleUpload'
   >
@@ -11,16 +11,23 @@
       v-bind='formItemLayout'
     >
       <a-form-item :label='labelName'>
-        <a-upload
-          list-type='picture'
-          v-decorator="['files']"
-          :file-list='fileList' :remove='handleRemove' :before-upload='beforeUpload'
-        >
-          <a-button>
-            <a-icon type='upload' />
-            点击上传
-          </a-button>
-        </a-upload>
+        <a-spin :spinning='loading'>
+          <a-upload
+            list-type='text'
+            v-decorator="['attachment']"
+            :headers='headers'
+            action='http://114.67.199.59/cfc/file/upload'
+            :file-list='fileList'
+            :remove='handleRemove'
+            @change='handleChange'
+
+          >
+            <a-button>
+              <a-icon type='upload' />
+              点击上传
+            </a-button>
+          </a-upload>
+        </a-spin>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -28,23 +35,32 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { ACCESS_TOKEN } from '../../store/mutation-types'
+
 export default {
-  props: ['visible', 'labelName'],
+  props: ['visible', 'labelName', 'files'],
   data () {
     return {
-      value: '',
+      headers: { authorization: `Bearer  ${Vue.ss.get(ACCESS_TOKEN)}` },
       form: this.$form.createForm(this),
       show: this.visible,
       fileList: [],
       uploading: false,
       formItemLayout: {
-        labelCol: { span: 6 },
+        labelCol: { span: 8 },
         wrapperCol: { span: 14 }
-      }
+      },
+      loading: false,
+      attachment: []
     }
+  },
+  mounted () {
+
   },
   methods: {
     cancel () {
+      this.fileList = []
       this.$emit('cancel')
     },
     handleRemove (file) {
@@ -53,25 +69,36 @@ export default {
       newFileList.splice(index, 1)
       this.fileList = newFileList
     },
-    beforeUpload (file) {
-      this.fileList = [...this.fileList, file]
-      return false
+    handleChange (info) {
+      this.fileList = info.fileList
+      if (info.file.status === 'uploading') {
+        this.loading = true
+      }
+
+      if (info.file.status === 'done' || info.file.status === 'error' || info.file.status === 'success') {
+        this.loading = false
+      }
+
+      // 上传
+      if (info.file.status === 'done' && info.file.response) {
+        const { data } = info.file.response
+        if (!data.id) {
+          this.$message.error('文件上传失败，请重试！')
+          this.fileList = info.fileList.filter((file) => file.status === 'done' || file.status === 'success')
+        }
+        this.attachment = info.fileList.map(item => item.response.data.id)
+      }
     },
     handleUpload () {
-      const { fileList } = this
-      const formData = new FormData()
-      fileList.forEach(file => {
-        formData.append('files[]', file)
-      })
-      this.uploading = true
-      // console.log(this.fileList, this.form.getFieldsValue())
       // 请求放到外层父组件
-      this.$emit('create')
+      this.$emit('create', { attachment: this.attachment })
     }
   },
   watch: {
     visible () {
       this.show = this.visible
+      this.fileList = this.files
+      console.log(this.files, 'uploadFIle')
     }
   }
 }

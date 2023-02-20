@@ -1,20 +1,16 @@
 <template>
   <a-card title='合作伙伴' :bordered='false'>
     <div class='operate-wrapper'>
-      <a-button type='primary' @click='showModal'>新增</a-button>
+      <a-button type='primary' @click='showModal'>编辑合作伙伴</a-button>
     </div>
 
     <a-list :grid='{ gutter: 16, column: 4 }' :data-source='listData'>
       <a-list-item slot='renderItem' slot-scope='item'>
         <a-card>
           <div style='width: 100%'>
-            <div style='display: flex; justify-content: end '>
-              <a-button type='primary' size='small' @click='showModal'>编辑</a-button>
-            </div>
-            <img :src='item.attachment' alt='' style='width: 100%; height: 60px;'>
+            <BusinessImage :file-id='item.id' style='height: 160px;width: 100%'></BusinessImage>
           </div>
           <div>
-
           </div>
         </a-card>
       </a-list-item>
@@ -30,42 +26,37 @@
 </template>
 
 <script>
-import imgLogo from '../../assets/images/p2.png'
-import imgLogo1 from '../../assets/images/p1.png'
-import imgLogo3 from '../../assets/images/p3.png'
+
 import FileUpload from '../../components/FileUpload/FileUpload'
-const data = [
-  {
-    title: 'Title 1',
-    attachment: imgLogo1
-  },
-  {
-    title: 'Title 2',
-    attachment: imgLogo
-  },
-  {
-    title: 'Title 3',
-    attachment: imgLogo3
-  },
-  {
-    title: 'Title 4',
-    attachment: imgLogo
-  },
-  {
-    title: 'Title 4',
-    attachment: imgLogo
-  },
-  {
-    title: 'Title 4',
-    attachment: imgLogo
-  }
-]
+import BusinessImage from '../../components/BusinessImage/BusinessImage'
+import { uploadInfo } from '../../api/home'
+import { getPartnerList } from '../../api/partner'
+
 export default {
-  components: { FileUpload },
+  components: { FileUpload, BusinessImage },
   data () {
     return {
-      listData: data,
+      listData: [],
       visible: false
+    }
+  },
+  mounted () {
+    this.getList()
+  },
+  computed: {
+    files () {
+      return this.listData.map((item, index) => ({
+        uid: '' + index,
+        name: item.fileName || item.name,
+        status: 'done',
+        thumbUrl: item.thumbUrl,
+        response: {
+          code: '0',
+          data: item,
+          message: 'success',
+          timestamp: Date.now()
+        }
+      }))
     }
   },
   methods: {
@@ -76,8 +67,17 @@ export default {
       this.visible = true
     },
     // 保存数据 发送请求
-    handleCreate () {
+    async handleCreate (data) {
+      const { attachment } = data
+      await uploadInfo({ id: 13, attachment })
       this.visible = false
+      this.$nextTick(() => {
+        this.getList()
+      })
+    },
+    async getList () {
+      const list = await getPartnerList('COOPERATIVE_PARTNER')
+      this.listData = list
     }
   }
 }

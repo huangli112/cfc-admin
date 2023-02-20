@@ -40,6 +40,7 @@ import LayoutHeader from './LayoutHeader'
 import Setting from '@/components/Setting'
 import { appStoreMixin, deviceMixin } from '@/mixins'
 import { DEVICE_TYPE } from '@/utils/device'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Layout',
@@ -53,6 +54,9 @@ export default {
     return {
       collapsed: false
     }
+  },
+  mounted () {
+    this.GetMenuList()
   },
   computed: {
     contentLeft () {
@@ -81,6 +85,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('user', ['GetMenuList']),
     toggle () {
       this.collapsed = !this.collapsed
     }

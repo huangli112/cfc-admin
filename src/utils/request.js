@@ -14,22 +14,22 @@ const onError = error => {
     const status = error.response.status
     const message = error.response.statusText
     const token = Vue.ss.get(ACCESS_TOKEN)
-    
+
     if (status === 403) {
       notification.error({ message: '禁止访问', description: message })
     }
-    
+
     if (status === 404) {
       notification.error({ message: '未知资源', description: message })
     }
-    
+
     if (status === 500) {
       notification.error({
         message: '服务器错误',
         description: message
       })
     }
-    
+
     if (status === 401 && !timer) {
       timer = setTimeout(() => {
         notification.error({
@@ -47,7 +47,7 @@ const onError = error => {
 }
 
 const request = axios.create({
-  baseURL: '/api',
+  baseURL: '/cfc',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8'
@@ -77,7 +77,7 @@ request.interceptors.request.use(
         console.log(config.data)
       }
     }
-    
+
     return config
   },
   error => {

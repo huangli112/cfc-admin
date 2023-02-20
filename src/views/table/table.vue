@@ -94,6 +94,8 @@
       </a-table>
     </a-card>
 
+    <BusinessImage file-id='b8d0c3b5a88e486fbff0e0a454dd9511' img-style='width:100px;height:100px; '></BusinessImage>
+
     <!--新增/修改用户-->
     <account-modal :visible="visible" :account="currentAccount" @close="onModalClose" />
   </div>
@@ -103,6 +105,7 @@
 import { queryFormMixin, tableMixin, rangePickerMixin } from '@/mixins'
 import AccountModal from './components/AccountModal'
 import { getUsers, deleteAccount, getRoles } from '@/api/form'
+import BusinessImage from '../../components/BusinessImage/BusinessImage'
 
 const columns = [
   {
@@ -168,7 +171,7 @@ const columns = [
 
 export default {
   mixins: [queryFormMixin, tableMixin, rangePickerMixin],
-  components: { AccountModal },
+  components: { AccountModal, BusinessImage },
   filters: {
     roleFilter (roleId, roleOptions) {
       let role = null

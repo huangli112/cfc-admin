@@ -45,33 +45,6 @@
             <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
           </a-input>
         </a-form-item>
-
-        <a-form-item>
-          <a-col :span="10">
-            <a-input
-              v-decorator="[
-                  'verificateCode',
-                  {
-                    rules: [
-                      { required: true, message: '请输入验证码' },
-                      { validator: validate }
-                    ],
-                    validateTrigger: 'blur',
-                    validateFirst: true
-                  }
-                ]"
-              @pressEnter="handleLogin"
-              size="large"
-              placeholder="验证码"
-            >
-              <a-icon slot="prefix" type="safety" :style="{ color: 'rgba(0,0,0,.25)' }" />
-            </a-input>
-          </a-col>
-          <a-col :span="12" :offset="2">
-            <validate-code ref="validate-code" @change="code => validateCode = code"></validate-code>
-          </a-col>
-        </a-form-item>
-
         <a-form-item style="margin-top: 24px; margin-bottom: 0;">
           <a-button
             @click="handleLogin"
@@ -85,20 +58,14 @@
       </a-form>
     </a-card>
 
-    <div class="login-footer">
-      <layout-footer></layout-footer>
-    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
-import ValidateCode from '@/components/ValidateCode'
-import { encryptpwd } from '@/utils'
 import { timeFix } from '@/utils/time'
 
 export default {
-  components: { ValidateCode },
   data () {
     return {
       form: this.$form.createForm(this),
@@ -107,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('user', ['Login']),
+    ...mapActions('user', ['Login', 'GetMenuList']),
     handleLogin () {
       this.loading = true
       this.form.validateFields((err, { username, password }) => {
@@ -119,7 +86,7 @@ export default {
         }
         this.Login({
           username,
-          password: encryptpwd(password)
+          password
         })
           .then(res => this.loginSuccess(res))
           .catch(res => this.requestFailed(res))
@@ -140,7 +107,6 @@ export default {
       }, 1000)
     },
     requestFailed (err) {
-      this.$refs['validate-code'].draw()
       this.$notification.error({
         message: '错误',
         description: (err || {}).message || '请求出现错误，请稍后再试',

@@ -1,7 +1,11 @@
 import request from '@/utils/request'
 
 export function login (params) {
-  return request.get('/login')
+  return request.post('/user/login', { requestData: params })
+}
+
+export function userLogin (data) {
+  return request.post('/user/login', { requestData: data })
 }
 
 export function logout () {

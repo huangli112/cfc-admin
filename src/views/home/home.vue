@@ -1,75 +1,82 @@
 <template>
   <a-card title='首页轮播图' :bordered='false'>
     <div class='operate-wrapper'>
-      <a-button type='primary' @click='showModal'>新增轮播图</a-button>
+      <a-button type='primary' @click='showModal'>编辑轮播图</a-button>
     </div>
 
     <a-list :grid='{ gutter: 16, column: 3 }' :data-source='listData'>
       <a-list-item slot='renderItem' slot-scope='item'>
         <a-card>
           <div style='width: 100%'>
-            <div style='display: flex; justify-content: end; margin-bottom: 10px'>
-              <a-button type='primary' style='margin-right: 10px' size='small' @click='showModal'>编辑</a-button>
-              <a-button type='danger' size='small' @click='deleteImg'>删除</a-button>
-            </div>
-            <img :src='item.attachment' alt='' style='height: 160px;'>
+            <BusinessImage :file-id='item.id' style='height: 160px;width: 100%'></BusinessImage>
           </div>
           <div>
-
           </div>
         </a-card>
       </a-list-item>
     </a-list>
     <file-upload
-      ref="uploadForm"
+      ref='uploadForm'
+      :files='files'
       :visible='visible'
-      @create="handleCreate"
+      @create='handleCreate'
       @cancel='handleCloseModal'
-      label-name="轮播图"
+      label-name='轮播图'
     />
   </a-card>
 </template>
 
 <script>
-import imgLogo from '../../assets/images/banner1.png'
-import imgLogo1 from '../../assets/images/banner2.png'
-import imgLogo3 from '../../assets/images/banner3.png'
 import FileUpload from '../../components/FileUpload/FileUpload'
-const data = [
-  {
-    title: 'Title 1',
-    attachment: imgLogo1
-  },
-  {
-    title: 'Title 2',
-    attachment: imgLogo
-  },
-  {
-    title: 'Title 3',
-    attachment: imgLogo3
-  }
-]
+import { getHomeSliderList, uploadInfo } from '../../api/home'
+import BusinessImage from '../../components/BusinessImage/BusinessImage'
+
 export default {
-  components: { FileUpload },
+  components: { FileUpload, BusinessImage },
   data () {
     return {
-      listData: data,
+      listData: [],
       visible: false
+    }
+  },
+  mounted () {
+    this.getList()
+  },
+  computed: {
+    files () {
+      return this.listData.map((item, index) => ({
+        uid: '' + index,
+        name: item.fileName || item.name,
+        status: 'done',
+        thumbUrl: item.thumbUrl,
+        response: {
+          code: '0',
+          data: item,
+          message: 'success',
+          timestamp: Date.now()
+        }
+      }))
     }
   },
   methods: {
     handleCloseModal () {
       this.visible = false
     },
-    deleteImg () {
-
-    },
     showModal () {
       this.visible = true
     },
     // 保存数据 发送请求
-    handleCreate () {
+    async handleCreate (data) {
+      const { attachment } = data
+      await uploadInfo({ id: 1, attachment })
       this.visible = false
+      this.$nextTick(() => {
+        this.getList()
+      })
+    },
+    async getList () {
+      const list = await getHomeSliderList('HOME')
+      this.listData = list
     }
   }
 }

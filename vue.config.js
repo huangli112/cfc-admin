@@ -8,7 +8,6 @@ function resolve (dir) {
 // vue.config.js
 module.exports = {
   publicPath: '/',
-
   transpileDependencies: ['resize-detector', 'ant-design-vue'],
 
   // configureWebpack: {
@@ -30,13 +29,10 @@ module.exports = {
 
   devServer: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000', // 后端服务器
-        ws: false,
+      '/': { // 匹配所有以'/' 开头的请求路径
+        target: 'http://114.67.199.59', // 代理目标的基础路径
         changeOrigin: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+        pathRewrite: { '^/': '' }
       }
     }
   }

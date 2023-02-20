@@ -7,17 +7,17 @@
       @submit='handleSubmit'
     >
       <a-form-item label='标题'>
-        <a-input placeholder='请输入标题' />
+        <a-input placeholder='请输入标题' v-decorator="['title']" />
       </a-form-item>
       <a-form-item label='英文标题'>
-        <a-input placeholder='请输入英文标题' />
+        <a-input placeholder='请输入英文标题'  v-decorator="['enTitle']"/>
       </a-form-item>
       <a-form-item label='描述'>
-        <a-textarea placeholder='请输入描述' :rows='4' />
+        <a-textarea placeholder='请输入描述' :rows='4'  v-decorator="['copywriting']" />
       </a-form-item>
       <a-form-item label='附件' extra='此处上传关于公司的背景图片'>
         <a-upload
-          v-decorator="['upload',{valuePropName: 'fileList',getValueFromEvent: normFile,}]"
+          v-decorator="['upload',{valuePropName: 'fileList',getValueFromEvent: normFile}]"
           name='logo'
           action='/upload.do'
           list-type='picture'

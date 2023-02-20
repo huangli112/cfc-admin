@@ -1,135 +1,205 @@
 <template>
   <a-card title='企业信息化' :bordered='false'>
     <div class='operate-wrapper'>
-      <a-button  @click='handleAdd' type='primary'>新增</a-button>
+      <a-button @click='handleAdd' type='primary'>新增</a-button>
     </div>
+    <a-table :columns='columns' :data-source='dataSource'>
+      <template slot='attachment' slot-scope='text, record'>
+        <BusinessImage :file-id='record.attachment[0].id'></BusinessImage>
+      </template>
+      <template slot='operation' slot-scope='text,record'>
+        <div style='display: flex'>
+          <a-button size='small' type='primary' @click='onEdit(record)' style='margin-right: 10px'>编辑</a-button>
+          <a-button size='small' type='danger' @click='onRemove(record)'>删除</a-button>
+        </div>
 
-      <a-table :columns='columns' :data-source='dataSource'>
-        <template slot='operation' slot-scope='text, record'>
-          <a @click='Edit(record)'>编辑</a>
-          <a-divider type='vertical' />
-          <a>删除</a>
-        </template>
-      </a-table>
-      <!-- 新增表单 -->
-      <a-modal v-model='visible' title='新增企业信息化' okText='保存' @cancel='ModalCancel' @ok='ModalOk'>
-        <a-form :form='form'>
-          <a-form-item
-            :label-col='formItemLayout.labelCol'
-            :wrapper-col='formItemLayout.wrapperCol'
-            label='标题'
+      </template>
+    </a-table>
+    <!-- 新增表单 -->
+    <a-modal v-model='visible' title='企业信息化' okText='保存' @cancel='modalCancel' @ok='modalOk'>
+      <a-form :form='form'>
+        <a-form-item
+          :label-col='formItemLayout.labelCol'
+          :wrapper-col='formItemLayout.wrapperCol'
+          label='标题'
+        >
+          <a-input v-decorator="['title']" placeholder='请输入标题' />
+        </a-form-item>
+        <a-form-item
+          :label-col='formItemLayout.labelCol'
+          :wrapper-col='formItemLayout.wrapperCol'
+          label='描述'
+        >
+          <a-textarea :rows='4' v-decorator="['content']" placeholder='请输入描述' />
+        </a-form-item>
+
+        <a-form-item
+          label='企业信息图'
+          :label-col='formItemLayout.labelCol'
+          :wrapper-col='formItemLayout.wrapperCol'
+        >
+          <a-upload
+            list-type='text'
+            v-decorator="['attachment']"
+            :file-list='fileList'
+            :headers='headers'
+            :action='uploadUrl'
+            :remove='handleFileRemove'
+            @change='handleFileChange'
           >
-            <a-input v-decorator="['username']" placeholder='请输入标题' />
-          </a-form-item>
-          <a-form-item
-            :label-col='formItemLayout.labelCol'
-            :wrapper-col='formItemLayout.wrapperCol'
-            label='描述'
-          >
-            <a-input v-decorator="['nickname']" placeholder='请输入描述' />
-          </a-form-item>
-          <a-form-item
-            label='附件图'
-            :label-col='formItemLayout.labelCol'
-            :wrapper-col='formItemLayout.wrapperCol'
-          >
-            <a-upload
-              list-type='picture'
-              v-decorator="['files']"
-              :file-list='fileList'
-              :remove='handleRemove'
-              :before-upload='beforeUpload'
-            >
-              <a-button>
-                <a-icon type='upload' />
-                点击上传
-              </a-button>
-            </a-upload>
-          </a-form-item>
-        </a-form>
-      </a-modal>
+            <a-button>
+              <a-icon type='upload' />
+              点击上传
+            </a-button>
+          </a-upload>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </a-card>
 
 </template>
 
 <script>
-const formItemLayout = {
-  labelCol: { span: 4 },
-  wrapperCol: { span: 18 }
-}
+import { handleAttachmentId, handleFileList, UploadUrl } from '../../utils/constant'
+import { addCompany, deleteCompany, getCompanyInfoList, updateCompany } from '../../api/company'
+import BusinessImage from '../../components/BusinessImage/BusinessImage'
+import { Modal } from 'ant-design-vue'
+import Vue from 'vue'
+import { ACCESS_TOKEN } from '../../store/mutation-types'
+
 export default {
+  components: { BusinessImage },
   data () {
     return {
+      uploadUrl: UploadUrl,
       /* 新增表单Modal */
       visible: false,
-      formItemLayout,
-      form: this.$form.createForm(this, { name: 'infomationForm' }),
-      /* 表格列 */
+      formItemLayout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 18 }
+      },
+      headers: { authorization: `Bearer  ${Vue.ss.get(ACCESS_TOKEN)}` },
+      form: this.$form.createForm(this),
+      fileList: [],
       columns: [
         {
           title: '标题',
           dataIndex: 'title',
-          width: '30%',
+          key: 'title',
+          width: '10%',
           fix: 'left'
         },
         {
           title: '描述',
-          dataIndex: 'description'
+          dataIndex: 'content',
+          key: 'content',
+          width: '50%'
+
         },
         {
           title: '附件图',
-          dataIndex: 'image'
+          dataIndex: 'attachment',
+          key: 'attachment',
+          width: '30%',
+
+          scopedSlots: { customRender: 'attachment' }
         },
         {
           title: '操作',
           dataIndex: 'operation',
+          width: '10%',
+
           scopedSlots: { customRender: 'operation' }
         }
       ],
-      /* 表格数据 */
-      dataSource: [
-        {
-          key: '0',
-          title: 'Edward King 0',
-          description: '32',
-          image: 'London, Park Lane no. 0'
-        }
-      ]
+      dataSource: [],
+      editId: ''
     }
   },
+  mounted () {
+    this.getInfoList()
+    console.log(this.headers)
+  },
+  computed: {},
   methods: {
     /* 附件 */
-    handleRemove (file) {
+    async getInfoList () {
+      this.dataSource = await getCompanyInfoList('ENTERPRISE_INFORMATIONIZATION')
+    },
+    handleFileRemove (file) {
       const index = this.fileList.indexOf(file)
       const newFileList = this.fileList.slice()
       newFileList.splice(index, 1)
       this.fileList = newFileList
     },
-    /* 附件 */
-    beforeUpload (file) {
-      this.fileList = [...this.fileList, file]
-      return false
+    handleFileChange (info) {
+      this.fileList = info.fileList
     },
     /* 新增Modal */
     handleAdd () {
       this.visible = true
     },
     /* 表单提交 */
-    ModalOk (e) {
-      console.log('提交')
-      this.visible = false
-      this.form.resetFields()
+    modalOk () {
+      // eslint-disable-next-line handle-callback-err
+      this.form.validateFields(async (err, value) => {
+        console.log(value)
+        const attachment = handleAttachmentId(value.attachment.fileList)
+        const params = { ...value, attachment, code: 'ENTERPRISE_INFORMATIONIZATION' }
+        console.log(params)
+        if (this.editId) {
+          await updateCompany({ id: this.editId, ...params }).then(() => {
+            this.getInfoList()
+            this.visible = false
+            this.form.resetFields()
+            this.fileList = []
+            this.editId = ''
+          })
+        } else {
+          await addCompany(params).then(() => {
+            this.getInfoList()
+            this.visible = false
+            this.form.resetFields()
+            this.fileList = []
+          })
+        }
+      })
     },
     /* 表单取消 */
-    ModalCancel (e) {
-      console.log('取消')
+    modalCancel (e) {
       this.visible = false
       this.form.resetFields()
     },
-    Edit (record) {
+    onEdit (record) {
       this.visible = true
-      this.infomationForm.setFieldsValue(record)
+      this.editId = record.id
+      record.attachment = handleFileList(record.attachment)
+      this.$nextTick(() => {
+        this.form.setFieldsValue({
+          title: record.title,
+          content: record.content,
+          attachment: record.attachment
+        })
+        this.fileList = record.attachment
+        console.log(this.form.getFieldsValue())
+      })
+
       console.log(record, 'record')
+    },
+    onRemove (record) {
+      Modal.confirm({
+        title: '删除确认',
+        content: '确定要删除这条数据吗?',
+        onOk: async () => {
+          await deleteCompany(record.id)
+          this.$nextTick(() => {
+            this.getInfoList()
+          })
+        },
+        onCancel: () => {
+          return false
+        }
+      })
     }
   }
 }

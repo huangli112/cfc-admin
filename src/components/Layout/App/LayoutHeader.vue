@@ -10,7 +10,7 @@
     <div class="header-left">
       <a-icon v-if="showTrigger" :type="triggerIconType" @click="$emit('toggle')" class="trigger" />
       <Logo v-if="layoutMode === 'top' && !isMobile" />
-      
+
       <Menu v-if="showMenu" mode="horizontal"></Menu>
     </div>
     <div class="header-right">
@@ -87,31 +87,31 @@ export default {
     justify-content: space-between;
     transition: all 0.3s;
     z-index: 100;
-    
+
     &.layout-header__dark {
       background: linear-gradient(180deg, #31363c 0%, #16191c 100%);
       color: #fff;
-      
+
       .trigger {
         color: #fff;
       }
     }
-    
+
     &.layout-header__light {
       background-color: #fff;
       box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
     }
-    
+
     &.layout-header__fixed {
       position: fixed;
       right: 0;
       top: 0;
     }
-    
+
     .header-left {
       display: flex;
     }
-    
+
     .trigger {
       line-height: 70px;
       padding: 0 24px;
@@ -119,7 +119,7 @@ export default {
       cursor: pointer;
       color: #333;
       transition: color 0.3s;
-      
+
       &:hover {
         background: rgba(0, 0, 0, 0.025);
       }

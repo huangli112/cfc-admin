@@ -4,31 +4,55 @@
       <a-list-item slot='renderItem' slot-scope='item'>
         <a slot='actions' @click='openUpload()'>编辑</a>
         <a-list-item-meta>
-          <a slot='title' href='https://www.antdv.com/'>{{ item.title }}轮播图</a>
+          <a slot='title'>{{ item.title }}</a>
         </a-list-item-meta>
       </a-list-item>
     </a-list>
     <FileUpload
+      :files='files'
       ref="uploadForm"
       :visible='isShowUpload'
       @create="handleCreate"
       @cancel='handleCloseModal'
-      label-name="合作图"
+      :label-name="title"
     />
   </div>
 </template>
 <script>
 
 import FileUpload from '../FileUpload/FileUpload'
+import { handleAttachmentId } from '../../utils/constant'
+import { uploadInfo } from '../../api/home'
+import { getSliderList } from '../../api/common'
 
 export default {
-  props: { title: String },
+  props: ['title', 'code', 'id'],
   components: { FileUpload },
   data () {
     return {
       fileList: [],
       uploading: false,
-      isShowUpload: false
+      isShowUpload: false,
+      listData: []
+    }
+  },
+  created () {
+    this.getList()
+  },
+  computed: {
+    files () {
+      return this.listData.map((item, index) => ({
+        uid: '' + index,
+        name: item.fileName || item.name,
+        status: 'done',
+        thumbUrl: item.thumbUrl,
+        response: {
+          code: '0',
+          data: item,
+          message: 'success',
+          timestamp: Date.now()
+        }
+      }))
     }
   },
   methods: {
@@ -43,14 +67,21 @@ export default {
     },
     handleCreate () {
       const form = this.$refs.uploadForm.form
-      form.validateFields((err, values) => {
+      form.validateFields(async (err, values) => {
         if (err) {
           return
         }
-        console.log('Received values of form: ', values)
-        form.resetFields()
-        this.visible = false
+        const attachment = handleAttachmentId(values.attachment.fileList)
+        await uploadInfo({ id: this.id, attachment })
+        this.$nextTick(() => {
+          this.isShowUpload = false
+          this.getList()
+        })
       })
+    },
+    async getList () {
+      const list = await getSliderList(this.code)
+      this.listData = list
     }
   }
 }

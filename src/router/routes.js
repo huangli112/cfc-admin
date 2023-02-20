@@ -43,13 +43,13 @@ export const appRoutes = [
         component: () => import(/* webpackChunkName: "table" */ '@/views/about/about')
       },
       {
-        path: '/product',
-        name: 'product',
+        path: '/soft',
+        name: 'soft',
         meta: {
           title: '软件产品',
-          icon: 'appstore'
+          icon: 'project'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/home/home')
+        component: () => import('@/views/soft/soft')
       },
       {
         path: '/train',
@@ -99,16 +99,7 @@ export const appRoutes = [
           title: '联系我们',
           icon: 'phone'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/table/table')
-      },
-      {
-        path: '/soft',
-        name: 'soft',
-        meta: {
-          title: '软件产品',
-          icon: 'project'
-        },
-        component: () => import('@/views/soft/soft')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/contactUs/contactUs')
       }
     ]
   }

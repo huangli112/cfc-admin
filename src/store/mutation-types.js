@@ -6,6 +6,7 @@ export const SYSTEM_FIXED_HEADER = 'DEFAULT_FIXED_HEADER'
 export const SYSTEM_FIXED_SIDERBAR = 'DEFAULT_FIXED_SIDERBAR'
 export const SYSTEM_AUTOHIDE_HEADER = 'DEFAULT_AUTOHIDE_HEADER'
 export const SYSTEM_COLORWEAK = 'SYSTEM_COLORWEAK'
+export const REQUEST_HEADERS = 'Headers'
 
 export const ACCESS_TOKEN = 'Authorization'
 export const USER = 'USER'

@@ -1,7 +1,8 @@
 <script lang="jsx">
-import { SideMenus } from '../../utils/constant'
+import Vue from 'vue'
 import { appStoreMixin, deviceMixin } from '@/mixins'
 import { generateOpenKeys } from '@/utils'
+import { MENUS } from '../../store/mutation-types'
 
 export default {
   mixins: [appStoreMixin, deviceMixin],
@@ -136,7 +137,7 @@ export default {
     return (
       <div class={ menuWrapClass }>
         <a-menu props={ menuProps } on={ menuEvent }>
-          { generateMenu(SideMenus) }
+          { generateMenu(Vue.ss.get(MENUS)) }
         </a-menu>
       </div>
     )

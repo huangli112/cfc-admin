@@ -1,5 +1,9 @@
 <template>
   <div>
+    <a-card title='新闻动态Banner图' :bordered='false'>
+      <CarouselUpload title='新闻动态banner图' code='NEWS_INFORMATION' :id='14' />
+    </a-card>
+
     <a-card title='新闻动态列表' :bordered='false'>
       <div class='operate-wrapper'>
         <a-button type='primary' @click='linkNews()'>新增新闻动态</a-button>
@@ -11,9 +15,9 @@
         :pagination='pagination'
         @change='handleTableChange'
       >
-        <template slot='copywriting'  slot-scope='text'>
-          <a-tooltip  placement="topLeft" :title='text'>
-            <span>{{text}}</span>
+        <template slot='copywriting' slot-scope='text'>
+          <a-tooltip placement='topLeft' :title='text'>
+            <span>{{ text }}</span>
           </a-tooltip>
         </template>
         <div slot='actions' slot-scope='record'>
@@ -28,6 +32,7 @@
 
 <script>
 import { queryFormMixin, tableMixin, rangePickerMixin } from '@/mixins'
+import CarouselUpload from '../../components/CarouselUpload/'
 
 const columns = [
   {
@@ -58,6 +63,7 @@ const columns = [
 ]
 
 export default {
+  components: { CarouselUpload },
   mixins: [queryFormMixin, tableMixin, rangePickerMixin],
   filters: {
     roleFilter (roleId, roleOptions) {

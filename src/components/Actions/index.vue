@@ -2,14 +2,6 @@
   <div class="actions-wrapper">
     <template v-if="layoutMode === 'side' || (layoutMode === 'top' && isDesktop)">
       <span
-        @click="handleClick({key: 'modifyPassword'})"
-        class="action"
-        title="修改密码"
-        style="font-size: 22px;"
-      >
-        <a-icon type="logout" />
-      </span>
-      <span
         @click="handleClick({key: 'logout'})"
         class="action"
         title="注销"
@@ -105,13 +97,13 @@ export default {
 <style lang="scss" scoped>
   .actions-wrapper {
     overflow: hidden;
-    
+
     .actions-trigger {
       transform: rotate(90deg);
       cursor: pointer;
       color: #fff;
     }
-    
+
     .action {
       display: inline-block;
       height: 100%;
@@ -119,12 +111,12 @@ export default {
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s;
-      
+
       &:hover {
         background: rgba(0, 0, 0, 0.025);
       }
     }
-    
+
     .avatar,
     .welcome {
       cursor: default;

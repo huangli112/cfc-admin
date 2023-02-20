@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card title="用户管理" :bordered="false">
+    <a-card title="软件产品" :bordered="false">
       <div class="table-search-wrapper">
         <a-form>
           <a-row>
@@ -9,12 +9,17 @@
                 <a-select v-model="selectModuleIndex" :options="moduleList" @change="onSelectChange"></a-select>
               </a-form-item>
             </a-col>
-            <a-col :md="8" :sm="24" :offset="1">
-              <a-button type="primary" icon="plus" @click="onAdd">新增</a-button>
+            <a-col :md="10" :sm="24" :offset="1">
+              <a-button type="primary" icon="plus" @click="onAdd">新增子模块</a-button>
+              <a-button type="default" @click="editModal" style='margin: 0 10px'>编辑选中模块</a-button>
+              <a-button type="danger"  @click="onDelete">删除选中模块</a-button>
             </a-col>
+
           </a-row>
         </a-form>
       </div>
+
+      <a-divider>模块内容</a-divider>
 
       <a-table
         style="margin-top: 40px;"
@@ -23,16 +28,15 @@
         rowKey="name"
         :pagination="false"
         :loading="tableLoading"
-        :scroll="{ x: 1500 }"
       >
         <span slot="updateTime" slot-scope="updateTime">
           {{ new Date(updateTime) | formatDate('yyyy-MM-dd hh:mm:ss') }}
         </span>
 
         <div slot="actions" slot-scope="record">
-          <a @click="onEdit(record)" href="javascript:0;">编辑</a>
+          <a @click="onEditContent(record)" href="javascript:0;">编辑</a>
           <a-divider type="vertical" />
-          <a @click="onDelete(record.id)" href="javascript:0;">删除</a>
+          <a @click="onDeleteContent(record.id)" href="javascript:0;">删除</a>
         </div>
 
       </a-table>
@@ -55,17 +59,22 @@ const columns = [
     width: 100
   },
   {
-    title: '一级标题',
+    title: '标题',
     dataIndex: 'title',
     align: 'center'
   },
   {
-    title: '二级标题',
-    dataIndex: 'subTitle',
+    title: '副标题',
+    dataIndex: 'subheading',
     align: 'center'
   },
   {
-    title: '描述',
+    title: '内容',
+    dataIndex: 'des',
+    align: 'center'
+  },
+  {
+    title: '内容描述',
     dataIndex: 'des',
     align: 'center'
   },
@@ -97,19 +106,19 @@ export default {
   data () {
     return {
       moduleList: [
-        { 
+        {
           value: 0,
           label: '好会计'
         },
-        { 
+        {
           value: 1,
           label: '好业财'
         },
-        { 
+        {
           value: 2,
           label: '好生意'
         },
-        { 
+        {
           value: 3,
           label: '易代帐'
         }
@@ -150,7 +159,7 @@ export default {
     }
   },
   computed: {
-    
+
   },
   methods: {
     async getModuleList () {
@@ -167,12 +176,15 @@ export default {
       this.selectModuleIndex = this.moduleList.length - 1
       this.selectModule = complate
     },
-    onEdit (row) {
+    editModal () {
+
+    },
+    onEditContent (row) {
       console.log(row)
       this.currentAccount = row
       this.visible = true
     },
-    async onDelete (id) {
+    async onDeleteContent (id) {
       const self = this
       this.$confirm({
         title: '删除',

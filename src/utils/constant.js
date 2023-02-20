@@ -1,64 +1,52 @@
-export const SideMenus = [
-  {
-    id: '1',
-    icon: 'home',
-    path: '/home',
-    name: 'table',
-    title: '首页'
-  },
-  {
-    id: '2',
-    icon: 'project',
-    path: '/about-company',
-    name: 'about-company',
-    title: '关于公司'
-  },
-  {
-    path: '/product',
-    name: 'product',
-    title: '软件产品',
-    icon: 'experiment'
-  },
-  {
-    id: '3',
-    icon: 'appstore',
-    path: '/train',
-    name: 'train',
-    title: '实训板块'
-  },
-  {
-    id: '4',
-    icon: 'folder-open',
-    path: '/company-info',
-    name: 'company-info',
-    title: '企业信息化'
-  },
-  {
-    id: '5',
-    icon: 'user',
-    path: '/partner',
-    name: 'partner',
-    title: '合作伙伴'
-  },
-  {
-    id: '6',
-    icon: 'file-markdown',
-    path: '/news',
-    name: 'news',
-    title: '新闻动态'
-  },
-  {
-    id: '7',
-    icon: 'phone',
-    path: '/concat-us',
-    name: 'concat-us',
-    title: '联系我们'
-  },
-  {
-    id: '8',
-    icon: 'project',
-    path: '/soft',
-    name: 'soft',
-    title: '软件产品'
+import { message } from 'ant-design-vue'
+
+export const UploadUrl = 'http://114.67.199.59/cfc/file/upload'
+
+export function blobToDataURI (blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(blob)
+  })
+}
+
+export async function downloadImage (fileId) {
+  if (!fileId) {
+    return message.error('not find fileId ')
   }
-]
+
+  try {
+    const resp = await fetch('http://114.67.199.59:80/cfc/file/download?fileUUID=' + fileId)
+    const blob = await resp.blob()
+    return blobToDataURI(blob)
+  } catch (error) {
+    // 文件下载失败
+    message.error('file download error')
+  }
+}
+
+export function handleAttachmentId (fileList) {
+  if (!fileList) {
+    return []
+  }
+  return fileList.map(item => item.response.data.id)
+}
+
+export function handleFileList (attachmentIds) {
+  if (!attachmentIds) {
+    return []
+  }
+  return attachmentIds.map((item, index) => ({
+    uid: '' + index,
+    name: item.fileName || item.name,
+    status: 'done',
+    thumbUrl: item.thumbUrl,
+    response: {
+      code: '0',
+      data: item,
+      message: 'success',
+      timestamp: Date.now()
+    }
+  }))
+}
