@@ -33,11 +33,11 @@ export function handleAttachmentId (fileList) {
   return fileList.map(item => item.response.data.id)
 }
 
-export function handleFileList (attachmentIds) {
-  if (!attachmentIds) {
+export function handleFileList (attachmentFiles) {
+  if (!attachmentFiles) {
     return []
   }
-  return attachmentIds.map((item, index) => ({
+  return attachmentFiles.map((item, index) => ({
     uid: '' + index,
     name: item.fileName || item.name,
     status: 'done',

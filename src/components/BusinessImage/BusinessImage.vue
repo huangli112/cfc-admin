@@ -20,6 +20,11 @@ export default {
       const base64 = await downloadImage(id)
       this.base64 = base64
     }
+  },
+  watch: {
+    fileId () {
+      this.handleImgBase64(this.fileId)
+    }
   }
 }
 </script>

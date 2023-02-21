@@ -39,6 +39,7 @@ const user = {
         if (res.code === '0') {
           commit('SET_TOKEN', res.data.token)
           commit('SET_USER', res.data.userInfo)
+          resolve()
         } else {
           reject(res)
         }

@@ -16,10 +16,10 @@ import MessagesList from './messages/MessagesList'
 import CarouselUpload from '@/components/CarouselUpload'
 import { getContactInfo } from '@/api/common'
 import { UploadUrl } from '@/utils/constant'
-import editList from '@/views/contactUs/editList/editList'
+import EditList from '@/views/contactUs/editList/EditList'
 
 export default {
-  components: { MessagesList, CarouselUpload, editList },
+  components: { MessagesList, CarouselUpload, EditList },
   data () {
     return {
       action: UploadUrl,
@@ -40,7 +40,6 @@ export default {
   methods: {
     async getFormInfo () {
       this.formData = await getContactInfo()
-      console.log(this.formData)
     },
     handleFileChange (info) {
       console.log(info)
@@ -55,8 +54,6 @@ export default {
           // 发送请求
         }
       })
-
-      // d
     },
     normFile (e) {
       console.log('Upload event:', e)

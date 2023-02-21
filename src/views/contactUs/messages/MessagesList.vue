@@ -6,12 +6,12 @@
           <a-row :gutter='48'>
             <a-col :md='8' :sm='24'>
               <a-form-item label='姓名' v-bind='formItemLayout'>
-                <a-input v-model='form.username' />
+                <a-input v-model='form.name' />
               </a-form-item>
             </a-col>
             <a-col :md='8' :sm='24'>
               <a-form-item label='电话' v-bind='formItemLayout'>
-                <a-input v-model='form.contacts' />
+                <a-input v-model='form.tel' />
               </a-form-item>
             </a-col>
             <a-col :md='8' :sm='24'>
@@ -19,13 +19,14 @@
                 <a-input v-model='form.email' />
               </a-form-item>
             </a-col>
-            <template v-if='!formFold'>
-              <a-col :md='8' :sm='24'>
-                <a-form-item label='模块' v-bind='formItemLayout'>
-                  <a-select v-model='form.customsId' :options='roleOptions' allowClear placeholder='请选择'></a-select>
-                </a-form-item>
-              </a-col>
-            </template>
+
+            <a-col :md='8' :sm='24'>
+              <a-form-item label='模块' v-bind='formItemLayout'>
+                <a-cascader v-model='form.modular' :display-render='displayRender' :options='options'
+                            placeholder='请选择' />
+              </a-form-item>
+            </a-col>
+
             <a-col :md='formFold && 8 || 24' :sm='24'>
               <span
                 class='search-buttons'
@@ -33,10 +34,6 @@
               >
                 <a-button type='primary' icon='search' @click='handleSearch'>查询</a-button>
                 <a-button icon='sync' @click='handleResetForm' style='margin-left: 8px'>重置</a-button>
-                <a @click='toggleFold' style='margin-left: 8px'>
-                  {{ formFold ? '展开' : '收起' }}
-                  <a-icon :type="formFold ? 'down' : 'up'" />
-                </a>
               </span>
             </a-col>
           </a-row>
@@ -46,7 +43,6 @@
       <a-table
         :columns='columns'
         :dataSource='rows'
-        :rowSelection='rowSelection'
         rowKey='id'
         :pagination='pagination'
         :loading='tableLoading'
@@ -54,17 +50,11 @@
       >
         <span slot='serial' slot-scope='text, record, index'>{{ serial + index + 1 }}</span>
 
-        <span slot='' slot-scope='roleId'>{{ roleId | roleFilter(roleOptions) }}</span>
-
         <template slot='content' slot-scope='text'>
           <a-tooltip placement='topLeft' :title='text'>
             <span>{{ text }}</span>
           </a-tooltip>
         </template>
-
-        <span slot='updateTime' slot-scope='updateTime'>
-          {{ new Date(updateTime) | formatDate('yyyy-MM-dd hh:mm:ss') }}
-        </span>
 
         <div slot='actions' slot-scope='record'>
           <a @click='onDelete(record.id)' href='javascript:0;'>删除</a>
@@ -76,8 +66,9 @@
 </template>
 
 <script>
-import { queryFormMixin, tableMixin, rangePickerMixin } from '@/mixins'
-import { deleteAccount, getRoles, getUsers } from '@/api/form'
+import { queryFormMixin, tableMixin } from '@/mixins'
+import { deleteMessage, getMessageList, getModuleList } from '@/api/common'
+
 const columns = [
   {
     title: '序号',
@@ -113,8 +104,7 @@ const columns = [
   },
   {
     title: '更新时间',
-    dataIndex: 'updateTime',
-    scopedSlots: { customRender: 'updateTime' },
+    dataIndex: 'createdTime',
     width: 160,
     align: 'center'
   },
@@ -129,85 +119,74 @@ const columns = [
 
 export default {
   name: 'MessagesList',
-  mixins: [queryFormMixin, tableMixin, rangePickerMixin],
+  mixins: [queryFormMixin, tableMixin],
   components: {},
-  filters: {
-    roleFilter (roleId, roleOptions) {
-      let role = null
-      roleOptions.forEach(item => {
-        if (item.value === roleId) {
-          role = item
-        }
-      })
-      return role.label
-    }
-  },
   data () {
     return {
       // 查询条件
       form: {},
-      // 当前选中行
-      selectedRowKeys: [],
-
       // 角色下拉框 备选项
-      roleOptions: [],
-
+      messageList: [],
+      moduleOptions: [],
       visible: false,
       currentAccount: null
     }
   },
   computed: {
-    rowSelection () {
-      const self = this
-      return {
-        selectedRowKeys: self.selectedRowKeys,
-        onChange: (keys, rows) => {
-          self.selectedRowKeys = keys
-        },
-        getCheckboxProps: record => ({
-          props: {
-            disabled: record.status === 1
-          }
-        })
-      }
-    },
-    isDisabled () {
-      return this.selectedRowKeys.length === 0
+    options () {
+      return this.handleOptions(this.moduleOptions)
     }
   },
   methods: {
+    handleOptions (data) {
+      return data.map(item => {
+        const obj = {}
+        if (item.child) {
+          obj.value = item.modular ? item.modular : item
+          obj.label = item.modular ? item.modular : item
+          obj.children = this.handleOptions(item.child)
+        } else {
+          obj.value = item.modular ? item.modular : item
+          obj.label = item.modular ? item.modular : item
+        }
+        return obj
+      })
+    },
+    handleResetForm () {
+      this.form = {}
+    },
+    displayRender ({ labels }) {
+      return labels[labels.length - 1]
+    },
     async search () {
+      let params = { ...this.form }
+      if (this.form.modular) {
+        params.modular = this.form.modular[this.form.modular.length - 1]
+      }
+
       this.tableLoading = true
       const { current, pageSize } = this.pagination
-      const res = await getUsers({
-        ...this.form,
-        current,
-        pageSize
-      })
-      this.rows = res
-      this.pagination.total = res.length
+      const res = await getMessageList(
+        { pageNumber: current, pageSize: pageSize },
+        { ...params }
+      )
+      this.rows = res.list
+      this.pagination.total = res.total
       this.tableLoading = false
     },
     handleSearch () {
       this.pagination.current = 1
       this.search()
     },
-    onCreate () {
-      this.visible = true
-    },
-    onEdit (row) {
-      this.currentAccount = row
-      this.visible = true
-    },
     async onDelete (id) {
       const self = this
       this.$confirm({
         title: '删除',
-        content: `确定要删除选该用户吗？`,
+        content: `确定要删除该留言吗？`,
         okText: '删除',
         okType: 'danger',
         async onOk () {
-          await deleteAccount(id)
+          await deleteMessage(id)
           self.$message.success('删除成功')
           self.search()
         },
@@ -216,24 +195,15 @@ export default {
         }
       })
     },
-    async queryRoles () {
-      const res = await getRoles()
-      this.roleOptions = res
-    },
-    onModalClose (isRefresh) {
-      // 如果子组件要求父组件刷新
-      if (isRefresh) {
-        this.search()
-      }
-      // 关闭 modal时清空currentAccount，防止 新增/修改 混乱
-      this.currentAccount = null
-      this.visible = false
+    async queryModuleOptions () {
+      const res = await getModuleList()
+      this.moduleOptions = res
     }
   },
   created () {
     this.columns = columns
-    this.queryRoles()
     this.search()
+    this.queryModuleOptions()
   }
 }
 </script>

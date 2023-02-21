@@ -18,10 +18,9 @@
             <a-input v-if="activeId === index && item.id !== 'WECHAT'" :value='item.value'
                      @change='handleInputChange($event,item.id)'
                      style='width: 600px'></a-input>
-
-            <BusinessImage v-if="item.id === 'WECHAT' && activeId === -1"
-                           :file-id='item.attachment[0].id'></BusinessImage>
-
+            <template  v-else-if="item.id === 'WECHAT'">
+              <BusinessImage :file-id='item.attachment[0].id' img-style='width:80px; height:80px'></BusinessImage>
+            </template>
             <div v-else>{{ item.value }}</div>
           </template>
           <h3 slot='title'>{{ item.name }}</h3>
@@ -29,7 +28,7 @@
       </a-list-item>
     </a-list>
     <file-upload
-      v-if='visible'
+      v-if="files"
       ref='uploadForm'
       :files='files'
       :visible='visible'
@@ -42,10 +41,10 @@
 
 </template>
 <script>
-import { getContactInfo } from '@/api/common'
+import { getContactInfo, updateInfo } from '@/api/common'
 import BusinessImage from '@/components/BusinessImage/BusinessImage'
 import FileUpload from '@/components/FileUpload/FileUpload'
-import { handleFileList } from '@/utils/constant'
+import { handleAttachmentId, handleFileList } from '@/utils/constant'
 
 export default {
   components: {
@@ -56,7 +55,8 @@ export default {
       loading: true,
       data: [],
       activeId: -1,
-      visible: false
+      visible: false,
+      inputValue: {}
     }
   },
   mounted () {
@@ -65,8 +65,11 @@ export default {
   },
   computed: {
     files () {
-      const target = this.data.find((item, index) => index === this.activeId).attachment || []
-      return handleFileList(target)
+      const target = this.data.find((item, index) => index === this.activeId)
+      if (target) {
+        return handleFileList(target.attachment)
+      }
+      return []
     }
   },
   methods: {
@@ -78,23 +81,36 @@ export default {
     },
     editValue (index, item) {
       this.activeId = index
+      this.inputValue = { id: item.id }
       if (item.id === 'WECHAT') {
         this.visible = true
-        this.handleCreate(item)
+        // this.handleCreate(item)
       }
     },
-    handleCreate () {
+    handleCreate (e) {
       // 处理请求
+      const { attachment } = this.$refs.uploadForm.form.getFieldsValue(['attachment'])
+      console.log(attachment)
+      this.inputValue = {
+        id: this.inputValue.id,
+        attachment: handleAttachmentId(attachment.fileList)
+      }
+      this.onChangeOk()
+      this.visible = false
     },
     handleCloseModal () {
       this.visible = false
       this.activeId = -1
     },
     handleInputChange (e, id) {
-      console.log(e.target.value, id)
+      this.inputValue = { ...this.inputValue, value: e.target.value }
     },
-    onChangeOk () {
-
+    async onChangeOk () {
+      await updateInfo(this.inputValue)
+      this.$nextTick(() => {
+        this.getData()
+      })
+      this.activeId = -1
     }
   }
 }
