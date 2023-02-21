@@ -88,7 +88,7 @@ export const appRoutes = [
         component: () => import(/* webpackChunkName: "table" */ '@/views/news/news')
       },
       {
-        path: '/news/detail/:id',
+        path: '/news-detail/:id',
         name: 'news-detail',
         component: () => import(/* webpackChunkName: "table" */ '@/views/news/newsDetail')
       },

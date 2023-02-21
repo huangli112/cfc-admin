@@ -77,8 +77,6 @@ export default {
       })
     },
     onFileChange (e) {
-      console.log('e=====>', e)
-      this.attachment = []
       this.attachment.push(e)
     }
   }

@@ -5,8 +5,10 @@ import { store, initStore } from './store/index'
 import './plugins'
 import * as filters from './filters'
 import './assets/styles/index.scss'
+import moment from 'moment'
 
 Vue.config.productionTip = false
+Vue.prototype.$moment = moment
 
 /* 定义全局过滤器 */
 Object.keys(filters).forEach(key => {

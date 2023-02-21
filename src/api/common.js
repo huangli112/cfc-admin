@@ -63,7 +63,7 @@ export async function editModuleImg () {
 }
 
 /*
-获取关于我们信息 用来获取基础数据
+获取关于我们信息 用来获取基础数据 /type/info
 */
 
 export async function getTypeInfo (code) {
@@ -74,4 +74,31 @@ export async function getTypeInfo (code) {
 export async function updateTypeInfo (data) {
   const res = await request.post('type/update', { requestData: { ...data } })
   return res.data
+}
+
+// 获取内容列表 (企业信息 实训板块列表 软件产品列表 新闻列表)
+
+export async function getContentList (code) {
+  const res = await request.post('content/list', { page: { pageNumber: 1, pageSize: -1 }, requestData: { code } })
+  return res.data
+}
+
+export async function addContentInfo (params) {
+  const res = await request.post('/content/save', { requestData: { ...params } })
+  return res.data
+}
+
+export async function getContentInfoById (id) {
+  const res = await request.post('/content/info', { requestData: { id } })
+  return res.data
+}
+
+export async function updateContentInfo (data) {
+  const res = await request.post('/content/update', { requestData: { ...data } })
+  return res.data
+}
+
+export async function deleteContentInfo (id) {
+  const res = await request.post('/content/delete', { requestData: { id } })
+  return res
 }
