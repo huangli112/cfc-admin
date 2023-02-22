@@ -39,6 +39,7 @@
 					v-decorator="['attachment',{valuePropName: 'fileList'}]"
 					action="http://114.67.199.59/cfc/file/upload"
 					list-type="text"
+					:headers="headers"
 				>
 					<a-button type="primary">
 						<a-icon type="upload" />点击上传
@@ -52,6 +53,8 @@
 <script>
 import ATextarea from 'ant-design-vue/es/input/TextArea'
 import { addSoft, updateSoft } from '@/api/soft.js'
+import Vue from 'vue'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 export default {
 	components: { ATextarea },
 	props: {
@@ -73,7 +76,8 @@ export default {
 			formItemLayout: {
 				labelCol: { span: 6 },
 				wrapperCol: { span: 18 }
-			}
+			},
+			headers: { authorization: `Bearer  ${Vue.ss.get(ACCESS_TOKEN)}` }
 		}
 	},
 	watch: {

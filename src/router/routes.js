@@ -67,7 +67,7 @@ export const appRoutes = [
           title: '企业信息化',
           icon: 'folder-open'
         },
-        component: () => import(/* webpackChunkName: "table" */ '@/views/companyInfo/companyInfo')
+        component: () => import(/* webpackChunkName: "table" */ '@/views/CompanyInfo/companyInfo')
       },
       {
         path: '/partner',
