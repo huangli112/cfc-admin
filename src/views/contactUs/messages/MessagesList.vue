@@ -27,14 +27,9 @@
               </a-form-item>
             </a-col>
 
-            <a-col :md='formFold && 8 || 24' :sm='24'>
-              <span
-                class='search-buttons'
-                :style="!formFold && { float: 'right', overflow: 'hidden' } || {} "
-              >
-                <a-button type='primary' icon='search' @click='handleSearch'>查询</a-button>
-                <a-button icon='sync' @click='handleResetForm' style='margin-left: 8px'>重置</a-button>
-              </span>
+            <a-col :md=' 8 || 24' :sm='24'>
+              <a-button type='primary' icon='search' @click='handleSearch'>查询</a-button>
+              <a-button icon='sync' @click='handleResetForm' style='margin-left: 10px'>重置</a-button>
             </a-col>
           </a-row>
         </a-form>
@@ -42,7 +37,7 @@
 
       <a-table
         :columns='columns'
-        :dataSource='rows'
+        :dataSource='dataSource'
         rowKey='id'
         :pagination='pagination'
         :loading='tableLoading'
@@ -129,7 +124,7 @@ export default {
       messageList: [],
       moduleOptions: [],
       visible: false,
-      currentAccount: null
+      dataSource: []
     }
   },
   computed: {
@@ -170,7 +165,8 @@ export default {
         { pageNumber: current, pageSize: pageSize },
         { ...params }
       )
-      this.rows = res.list
+      this.dataSource = res.list
+      console.log(this.dataSource)
       this.pagination.total = res.total
       this.tableLoading = false
     },

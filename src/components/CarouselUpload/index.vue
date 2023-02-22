@@ -39,7 +39,6 @@ export default {
   },
   created () {
     this.getList()
-    console.log(this.id)
   },
   computed: {
     files () {
@@ -63,7 +62,6 @@ export default {
     },
     handleCloseModal () {
       const form = this.$refs.uploadForm.form
-      console.log(form)
       form.resetFields()
       this.isShowUpload = false
     },
@@ -73,9 +71,7 @@ export default {
         if (err) {
           return
         }
-        debugger
         const attachment = handleAttachmentId(values.attachment.fileList)
-        console.log(this.childId)
         await uploadInfo({ id: this.childId, attachment })
         this.$nextTick(() => {
           this.isShowUpload = false
@@ -93,7 +89,6 @@ export default {
       immediate: true,
       handler (newValue) {
         this.childId = newValue
-        console.log(newValue, 'newValue')
       }
     }
   }

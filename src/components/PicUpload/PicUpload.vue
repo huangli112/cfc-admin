@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     handleChange (info) {
-      console.log(info.fileList)
       if (info.file.status === 'uploading') {
         this.loading = true
         return
