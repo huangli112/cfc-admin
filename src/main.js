@@ -8,6 +8,7 @@ import './assets/styles/index.scss'
 import moment from 'moment'
 
 Vue.config.productionTip = false
+Vue.config.silent = true
 Vue.prototype.$moment = moment
 
 /* 定义全局过滤器 */
@@ -19,7 +20,7 @@ new Vue({
   router,
   store,
   render: h => h(App),
-  created () {
+  created() {
     initStore()
   }
 }).$mount('#app')
