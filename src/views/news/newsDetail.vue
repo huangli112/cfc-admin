@@ -76,7 +76,7 @@ export default {
           value.date = this.$moment(value.date).format('YYYY-MM-DD')
           const params = { ...value, content: this.content, code: 'NEWS_INFORMATION' }
           if (this.editId) {
-            await updateContentInfo(params)
+            await updateContentInfo({ ...params, id: this.editId })
             message.success('更新成功')
           } else {
             await addContentInfo(params)

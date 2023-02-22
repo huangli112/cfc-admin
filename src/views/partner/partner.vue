@@ -17,6 +17,7 @@
     </a-list>
     <file-upload
       ref="uploadForm"
+      :files='files'
       :visible='visible'
       @create="handleCreate"
       @cancel='handleCloseModal'

@@ -72,8 +72,8 @@ import { deleteMessage, getMessageList, getModuleList } from '@/api/common'
 const columns = [
   {
     title: '序号',
-    dataIndex: 'id',
-    align: 'center'
+    align: 'center',
+    scopedSlots: { customRender: 'serial' }
   },
   {
     title: '姓名',
@@ -141,13 +141,13 @@ export default {
     handleOptions (data) {
       return data.map(item => {
         const obj = {}
-        if (item.child) {
+        if (!item.child) {
           obj.value = item.modular ? item.modular : item
           obj.label = item.modular ? item.modular : item
-          obj.children = this.handleOptions(item.child)
         } else {
           obj.value = item.modular ? item.modular : item
           obj.label = item.modular ? item.modular : item
+          obj.children = this.handleOptions(item.child)
         }
         return obj
       })
@@ -186,9 +186,13 @@ export default {
         okText: '删除',
         okType: 'danger',
         async onOk () {
-          await deleteMessage(id)
-          self.$message.success('删除成功')
-          self.search()
+          try {
+            await deleteMessage(id)
+            self.$message.success('删除成功')
+            await self.search()
+          } catch {
+            self.$message.success('删除成功')
+          }
         },
         onCancel () {
           self.$message.warning('取消删除')

@@ -53,7 +53,8 @@ export default {
     },
     handleMenuClick ({ item, key, keyPath }) {
       this.selectedKeys = [keyPath[0]]
-      this.$router.push(key)
+      console.log(key)
+      this.$router.push(`/${key}`)
       this.$emit('close')
     },
     updateMenu () {

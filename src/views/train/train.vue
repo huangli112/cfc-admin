@@ -2,7 +2,7 @@
   <div>
     <a-card title='实训板块列表' :bordered='false'>
       <div class='operate-wrapper'>
-        <a-button type='primary' @click='showModal'>新增实训板块</a-button>
+        <a-button type='primary' @click='addInfo'>新增实训板块</a-button>
       </div>
       <a-table
         :columns='columns'
@@ -11,9 +11,13 @@
         :pagination='pagination'
         @change='handleTableChange'
       >
-        <template slot='copywriting'  slot-scope='text'>
-          <a-tooltip  placement="topLeft" :title='text'>
-           <span>{{text}}</span>
+        <template slot='attachment' slot-scope='text, record'>
+          <template v-if='!record.attachment.length'>-</template>
+          <BusinessImage v-else :file-id='record.attachment[0].id' img-style='height: 80px;'></BusinessImage>
+        </template>
+        <template slot='content' slot-scope='text'>
+          <a-tooltip placement='topLeft' :title='text'>
+            <span>{{ text }}</span>
           </a-tooltip>
         </template>
         <div slot='actions' slot-scope='record'>
@@ -24,15 +28,21 @@
       </a-table>
     </a-card>
 
-    <business-modal :visible='visible'
-                    @create="handleCreate"
-                    @cancel='handleCloseModal' />
+    <business-modal
+      :visible='visible'
+      :title='title'
+      :id='id'
+      @ok='handleCreate'
+      @cancel='handleCloseModal' />
   </div>
 </template>
 
 <script>
-import { queryFormMixin, tableMixin, rangePickerMixin } from '@/mixins'
+import { queryFormMixin, tableMixin } from '@/mixins'
 import BusinessModal from '../../components/BusinessModal/BusinessModal'
+import { deleteContentInfo, getContentList } from '@/api/common'
+import { Modal } from 'ant-design-vue'
+import BusinessImage from '@/components/BusinessImage/BusinessImage'
 
 const columns = [
   {
@@ -47,95 +57,94 @@ const columns = [
   },
   {
     title: '内容',
-    dataIndex: 'copywriting',
+    dataIndex: 'content',
     ellipsis: true,
-
-    scopedSlots: { customRender: 'copywriting' }
+    scopedSlots: { customRender: 'content' }
+  },
+  {
+    title: '优先级',
+    dataIndex: 'showIndex',
+    ellipsis: true
+  },
+  {
+    title: '链接',
+    dataIndex: 'link',
+    ellipsis: true
+  },
+  {
+    title: '实训板块附件',
+    dataIndex: 'attachment',
+    ellipsis: true,
+    width: '30%',
+    scopedSlots: { customRender: 'attachment' }
   },
   {
     title: '操作',
-    scopedSlots: { customRender: 'actions' },
-    width: 120,
-    fixed: 'right'
+    width: '10%',
+    scopedSlots: { customRender: 'actions' }
   }
 ]
 
 export default {
-  mixins: [queryFormMixin, tableMixin, rangePickerMixin],
-  components: { BusinessModal },
-  filters: {
-    roleFilter (roleId, roleOptions) {
-      let role = null
-      roleOptions.forEach(item => {
-        if (item.value === roleId) {
-          role = item
-        }
-      })
-      return role.label
-    }
-  },
+  mixins: [queryFormMixin, tableMixin],
+  components: { BusinessModal, BusinessImage },
   data () {
     return {
       // 查询条件
-      form: {},
+      columns: columns,
       visible: false,
-      rows: [
-        {
-          title: '财会实训',
-          enTitle: 'ACCOUNTING PRACTICE',
-          copywriting: '好会计拥有智能记账与保税、多维度财务核算等功能，提升财做账效率 好会计拥有智能记账与保税、多维度财务核算等功能，提升财做账效率'
-        },
-        {
-          title: '软件编程',
-          enTitle: 'SOFTWARE PROGRAMMING',
-          copywriting: '好会计拥有智能记账与保税、多维度财务核算等功能，提升财做账效率 好会计拥有智能记账与保税、多维度财务核算等功能，提升财做账效率'
-        }
-      ]
+      rows: [],
+      title: '',
+      id: ''
     }
   },
+
   computed: {},
   methods: {
+    async getInfoList () {
+      this.rows = await getContentList('TRAINING_SECTION')
+    },
     handleCloseModal () {
       this.visible = false
+      this.id = ''
     },
-    showModal () {
+    addInfo () {
       this.visible = true
+      this.title = '新增实训板块'
     },
     // 保存数据 发送请求
     handleCreate () {
       this.visible = false
+      this.id = ''
+      this.getInfoList()
     },
     onEdit (row) {
-      this.currentAccount = row
       this.visible = true
+      this.title = '编辑实训板块'
+      this.id = row.id
     },
     async onDelete (id) {
-      const self = this
-      this.$confirm({
-        title: '删除',
-        content: `确定要删除该选项吗？`,
-        okText: '删除',
-        okType: 'danger',
-        onOk () {
-          this.visible = false
+      Modal.confirm({
+        title: '删除确认',
+        content: '确定要删除这条数据吗?',
+        onOk: async () => {
+          await deleteContentInfo(id)
+          this.$nextTick(() => {
+            this.getInfoList()
+          })
         },
-        onCancel () {
-          self.$message.warning('取消删除')
+        onCancel: () => {
+          return false
         }
       })
     },
     onModalClose (isRefresh) {
-      // 如果子组件要求父组件刷新
-      if (isRefresh) {
-        this.search()
-      }
-      // 关闭 modal时清空currentAccount，防止 新增/修改 混乱
-      this.currentAccount = null
       this.visible = false
     }
+
   },
   created () {
-    this.columns = columns
+    this.getInfoList()
   }
 
 }

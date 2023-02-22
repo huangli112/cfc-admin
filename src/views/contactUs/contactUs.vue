@@ -1,7 +1,9 @@
 <template>
   <div>
     <a-card title='联系我们Banner图' :bordered='false'>
-      <CarouselUpload title='联系我们Banner图' code='CONTACT_US' :id='16' />
+      <CarouselUpload v-if='childInfo[0]' title='联系我们Banner图' code='CONTACT_US_CHILD'  :id='childInfo[0]' />
+      <div style='padding:10px'></div>
+      <CarouselUpload v-if='childInfo[1]'  title='留言列表Banner图' code='ONLINE_MESSAGE' :id='childInfo[1]' />
     </a-card>
     <a-card title='联系信息' :bordered='false'>
       <editList />
@@ -14,7 +16,7 @@
 <script>
 import MessagesList from './messages/MessagesList'
 import CarouselUpload from '@/components/CarouselUpload'
-import { getContactInfo } from '@/api/common'
+import { getContactChild, getContactInfo } from '@/api/common'
 import { UploadUrl } from '@/utils/constant'
 import EditList from '@/views/contactUs/editList/EditList'
 
@@ -30,16 +32,21 @@ export default {
       },
       formData: {},
       loading: false,
-      fieldId: ''
+      fieldId: '',
+      childInfo: []
     }
   },
   mounted () {
     // 获取联系信息详情
     this.getFormInfo()
+    this.getChild()
   },
   methods: {
     async getFormInfo () {
       this.formData = await getContactInfo()
+    },
+    async getChild () {
+      this.childInfo = await getContactChild('CONTACT_US')
     },
     handleFileChange (info) {
       console.log(info)

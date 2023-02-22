@@ -74,7 +74,6 @@ export default {
   data () {
     return {
       uploadUrl: UploadUrl,
-      /* 新增表单Modal */
       visible: false,
       formItemLayout: {
         labelCol: { span: 4 },
@@ -126,7 +125,7 @@ export default {
   },
   computed: {},
   methods: {
-    /* 附件 */
+
     async getInfoList () {
       this.dataSource = await getCompanyInfoList('ENTERPRISE_INFORMATIONIZATION')
     },

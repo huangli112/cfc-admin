@@ -10,11 +10,11 @@
     </a-list>
     <FileUpload
       :files='files'
-      ref="uploadForm"
+      ref='uploadForm'
       :visible='isShowUpload'
-      @create="handleCreate"
+      @create='handleCreate'
       @cancel='handleCloseModal'
-      :label-name="title"
+      :label-name='title'
     />
   </div>
 </template>
@@ -33,11 +33,13 @@ export default {
       fileList: [],
       uploading: false,
       isShowUpload: false,
-      listData: []
+      listData: [],
+      childId: ''
     }
   },
   created () {
     this.getList()
+    console.log(this.id)
   },
   computed: {
     files () {
@@ -71,8 +73,10 @@ export default {
         if (err) {
           return
         }
+        debugger
         const attachment = handleAttachmentId(values.attachment.fileList)
-        await uploadInfo({ id: this.id, attachment })
+        console.log(this.childId)
+        await uploadInfo({ id: this.childId, attachment })
         this.$nextTick(() => {
           this.isShowUpload = false
           this.getList()
@@ -82,6 +86,15 @@ export default {
     async getList () {
       const list = await getSliderList(this.code)
       this.listData = list
+    }
+  },
+  watch: {
+    id: {
+      immediate: true,
+      handler (newValue) {
+        this.childId = newValue
+        console.log(newValue, 'newValue')
+      }
     }
   }
 }

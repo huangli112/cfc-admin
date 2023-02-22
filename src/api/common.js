@@ -32,8 +32,8 @@ export async function getModuleList () {
 /*
 * 删除留言
 * */
-export async function deleteMessage () {
-  const resp = await request.post('/onlineMessage/delete')
+export async function deleteMessage (id) {
+  const resp = await request.post('/onlineMessage/delete', { requestData: { id } })
   return resp.data
 }
 
@@ -73,14 +73,14 @@ export async function getTypeInfo (code) {
 
 export async function updateTypeInfo (data) {
   const res = await request.post('type/update', { requestData: { ...data } })
-  return res.data
+  return res.data.list
 }
 
 // 获取内容列表 (企业信息 实训板块列表 软件产品列表 新闻列表)
 
 export async function getContentList (code) {
   const res = await request.post('content/list', { page: { pageNumber: 1, pageSize: -1 }, requestData: { code } })
-  return res.data
+  return res.data.list
 }
 
 export async function addContentInfo (params) {
@@ -101,4 +101,10 @@ export async function updateContentInfo (data) {
 export async function deleteContentInfo (id) {
   const res = await request.post('/content/delete', { requestData: { id } })
   return res
+}
+
+// 获取联系我们子集菜单
+export async function getContactChild (code) {
+  const res = await request.post('/type/child', { requestData: { code } })
+  return res.data.map(item => item.id)
 }

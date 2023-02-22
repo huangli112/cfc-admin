@@ -105,8 +105,7 @@ export default {
       })
     },
     async getNewsList () {
-      const res = await getContentList('NEWS_INFORMATION')
-      this.rows = res.list
+      this.rows = await getContentList('NEWS_INFORMATION')
     }
   },
   mounted () {
