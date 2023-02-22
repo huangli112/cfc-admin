@@ -2,17 +2,9 @@
 	<div>
 		<a-card title="软件产品" :bordered="false">
 			<a-button @click="handleAdd" type="primary">新增模块</a-button>
-			<a-table
-				style="margin-top: 40px;"
-				:columns="columns"
-				:dataSource="dataSource"
-				rowKey="name"
-				:pagination="false"
-			>
-				<span
-					slot="updateTime"
-					slot-scope="updateTime"
-				>{{ new Date(updateTime) | formatDate('yyyy-MM-dd') }}</span>
+			<a-table style="margin-top: 40px;" :columns="columns" :dataSource="dataSource" rowKey="name"
+				:pagination="false">
+				<span slot="updateTime" slot-scope="updateTime">{{ new Date(updateTime) | formatDate('yyyy-MM-dd') }}</span>
 
 				<div slot="actions" slot-scope="record">
 					<a @click="onEditContent(record)">编辑</a>
@@ -20,14 +12,8 @@
 					<a @click="onDeleteContent(record.id)">删除</a>
 				</div>
 			</a-table>
-			<soft-modal
-				:visible="visible"
-				:data="formData"
-				:title="title"
-				:module="selectModule"
-				@close="onModalClose"
-				@ok="handleOk"
-			></soft-modal>
+			<soft-modal :visible="visible" :data="formData" :title="title" :module="selectModule" @close="onModalClose"
+				@ok="handleOk"></soft-modal>
 		</a-card>
 	</div>
 </template>
