@@ -3,10 +3,12 @@
     <div class='operate-wrapper'>
       <a-button @click='handleAdd' type='primary'>新增</a-button>
     </div>
-    <a-table :columns='columns' :data-source='dataSource'>
+    <a-table :columns='columns' :data-source='dataSource' rowKey='title'>
       <template slot='attachment' slot-scope='text, record'>
-        <BusinessImage :file-id='record.attachment[0].id'></BusinessImage>
+        <template v-if='!record.attachment.length'>-</template>
+        <BusinessImage v-else :file-id='record.attachment[0].id' img-style='height: 80px;'></BusinessImage>
       </template>
+
       <template slot='operation' slot-scope='text,record'>
         <div style='display: flex'>
           <a-button size='small' type='primary' @click='onEdit(record)' style='margin-right: 10px'>编辑</a-button>
@@ -40,7 +42,7 @@
         >
           <a-upload
             list-type='text'
-            v-decorator="['attachment']"
+            v-decorator="['attachment',{require:true}]"
             :file-list='fileList'
             :headers='headers'
             :action='uploadUrl'
@@ -93,16 +95,19 @@ export default {
           title: '描述',
           dataIndex: 'content',
           key: 'content',
-          width: '50%'
-
+          width: '40%'
         },
         {
           title: '附件图',
           dataIndex: 'attachment',
           key: 'attachment',
-          width: '30%',
-
           scopedSlots: { customRender: 'attachment' }
+        },
+        {
+          title: '修改时间',
+          dataIndex: 'createdTime',
+          key: 'createdTime',
+          width: '10%'
         },
         {
           title: '操作',
@@ -118,7 +123,6 @@ export default {
   },
   mounted () {
     this.getInfoList()
-    console.log(this.headers)
   },
   computed: {},
   methods: {
@@ -143,18 +147,15 @@ export default {
     modalOk () {
       // eslint-disable-next-line handle-callback-err
       this.form.validateFields(async (err, value) => {
-        console.log(value)
-        const attachment = handleAttachmentId(value.attachment.fileList)
+        const attachment = handleAttachmentId(this.fileList)
         const params = { ...value, attachment, code: 'ENTERPRISE_INFORMATIONIZATION' }
-        console.log(params)
         if (this.editId) {
-          await updateCompany({ id: this.editId, ...params }).then(() => {
-            this.getInfoList()
-            this.visible = false
-            this.form.resetFields()
-            this.fileList = []
-            this.editId = ''
-          })
+          await updateCompany({ id: this.editId, ...params })
+          await this.getInfoList()
+          this.visible = false
+          this.form.resetFields()
+          this.fileList = []
+          this.editId = ''
         } else {
           await addCompany(params).then(() => {
             this.getInfoList()
@@ -173,18 +174,15 @@ export default {
     onEdit (record) {
       this.visible = true
       this.editId = record.id
-      record.attachment = handleFileList(record.attachment)
+      const attachment = handleFileList(record.attachment)
       this.$nextTick(() => {
         this.form.setFieldsValue({
           title: record.title,
           content: record.content,
-          attachment: record.attachment
+          attachment
         })
-        this.fileList = record.attachment
-        console.log(this.form.getFieldsValue())
       })
-
-      console.log(record, 'record')
+      this.fileList = attachment
     },
     onRemove (record) {
       Modal.confirm({

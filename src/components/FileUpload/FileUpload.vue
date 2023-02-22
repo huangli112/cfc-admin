@@ -56,7 +56,6 @@ export default {
     }
   },
   mounted () {
-
   },
   methods: {
     cancel () {
@@ -97,8 +96,9 @@ export default {
   watch: {
     visible () {
       this.show = this.visible
-      this.fileList = this.files
-      console.log(this.files, 'uploadFIle')
+      if (this.visible) {
+        this.fileList = this.files
+      }
     }
   }
 }

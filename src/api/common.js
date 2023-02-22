@@ -16,8 +16,8 @@ export async function getSliderList (code) {
 * 获取留言板列表 /onlineMessage/list 不传参数
 *
 * */
-export async function getMessageList () {
-  const resp = await request.post('/onlineMessage/list')
+export async function getMessageList (page, data) {
+  const resp = await request.post('/onlineMessage/list', { page, requestData: { ...data } })
   return resp.data
 }
 
@@ -43,6 +43,11 @@ export async function deleteMessage () {
 *
 * */
 
+export async function updateInfo (data) {
+  const res = await request.post('/info/update', { requestData: { ...data } })
+  return res
+}
+
 export async function getContactInfo () {
   const resp = await request.post('/info/list', { page: { pageNumber: 1, pageSize: -1 }, requestData: {} })
   return resp.data.list
@@ -55,4 +60,45 @@ export async function getContactInfo () {
 export async function editModuleImg () {
   const resp = await request.post('/type/update')
   return resp.data
+}
+
+/*
+获取关于我们信息 用来获取基础数据 /type/info
+*/
+
+export async function getTypeInfo (code) {
+  const res = await request.post('type/info', { requestData: { code } })
+  return res.data
+}
+
+export async function updateTypeInfo (data) {
+  const res = await request.post('type/update', { requestData: { ...data } })
+  return res.data
+}
+
+// 获取内容列表 (企业信息 实训板块列表 软件产品列表 新闻列表)
+
+export async function getContentList (code) {
+  const res = await request.post('content/list', { page: { pageNumber: 1, pageSize: -1 }, requestData: { code } })
+  return res.data
+}
+
+export async function addContentInfo (params) {
+  const res = await request.post('/content/save', { requestData: { ...params } })
+  return res.data
+}
+
+export async function getContentInfoById (id) {
+  const res = await request.post('/content/info', { requestData: { id } })
+  return res.data
+}
+
+export async function updateContentInfo (data) {
+  const res = await request.post('/content/update', { requestData: { ...data } })
+  return res.data
+}
+
+export async function deleteContentInfo (id) {
+  const res = await request.post('/content/delete', { requestData: { id } })
+  return res
 }

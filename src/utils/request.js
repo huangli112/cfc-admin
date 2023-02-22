@@ -4,6 +4,7 @@ import router from '@/router'
 import axios from 'axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import notification from 'ant-design-vue/es/notification'
+import { message } from 'ant-design-vue'
 
 // api 配置
 
@@ -90,7 +91,9 @@ request.interceptors.request.use(
 
 // 响应拦截器
 request.interceptors.response.use(res => {
-  console.log(res)
+  if (res.data.code === '1') {
+    return message.error(res.data.message)
+  }
   const jsonPattern = /application\/json/gi
   if (jsonPattern.test(res.headers['content-type'])) {
     return res.data
