@@ -16,12 +16,12 @@
         <a-textarea placeholder='请输入描述' :rows='4' v-decorator="['copywriting']" />
       </a-form-item>
       <a-form-item label='附件' extra='此处上传关于公司的背景图片'>
-        <PicUpload :init-file-id='fileId'  @onFileChange='onFileChange'></PicUpload>
+        <PicUpload v-if='fileId' :init-file-id='fileId'  @onFileChange='onFileChange'></PicUpload>
       </a-form-item>
 
       <a-form-item :wrapper-col='{ span: 5, offset: 19 }'>
         <a-button type='primary' html-type='submit' style='margin-right:10px'>确定</a-button>
-        <a-button @click='handleCancel'>取消</a-button>
+<!--        <a-button @click='handleCancel'>取消</a-button>-->
       </a-form-item>
     </a-form>
   </a-card>
