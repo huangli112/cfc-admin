@@ -36,7 +36,7 @@
       </a-form-item>
       <a-form-item label='附件' extra='此处上传产品板块轮播图'>
         <a-upload
-          v-decorator="['attachment']"
+          v-decorator="['attachment',  {valuePropName: 'fileList'},]"
           action='http://114.67.199.59/cfc/file/upload'
           list-type='text'
           :headers='headers'
