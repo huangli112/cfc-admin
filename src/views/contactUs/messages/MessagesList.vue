@@ -72,12 +72,12 @@ const columns = [
   },
   {
     title: '姓名',
-    dataIndex: 'username',
+    dataIndex: 'name',
     align: 'center'
   },
   {
     title: '电话',
-    dataIndex: 'contacts',
+    dataIndex: 'tel',
     align: 'center'
   },
   {
@@ -87,7 +87,7 @@ const columns = [
   },
   {
     title: '模块',
-    dataIndex: 'module',
+    dataIndex: 'modular',
     width: 200,
     align: 'center'
   },
